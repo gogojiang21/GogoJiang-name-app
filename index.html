@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>九宮命格完整分析生成器</title>
+  <style>
+    :root{
+      --bg:#f6f1e8;
+      --card:#fffdf9;
+      --line:#e7dccd;
+      --text:#2b241c;
+      --muted:#6e6255;
+      --accent:#8c6840;
+      --accent2:#efe4d6;
+      --shadow:0 10px 30px rgba(58,40,22,.08);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;background:linear-gradient(180deg,#f8f4ee,#f4eee6);color:var(--text)}
+    .wrap{max-width:1100px;margin:0 auto;padding:20px}
+    .hero,.card{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+    .hero{padding:24px;margin-bottom:16px}
+    h1{margin:0 0 8px;font-size:30px}
+    .sub{color:var(--muted);line-height:1.8;margin:0}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .card{padding:20px}
+    .title{font-size:20px;font-weight:800;margin:0 0 14px}
+    label{display:block;font-weight:700;margin:10px 0 8px}
+    input,textarea{width:100%;padding:14px 16px;border-radius:14px;border:1px solid #d9cbbb;background:#fff;color:var(--text);font-size:16px;outline:none}
+    input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(140,104,64,.12)}
+    textarea{min-height:180px;line-height:1.7;resize:vertical}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    button{border:0;border-radius:14px;padding:12px 16px;font-size:15px;font-weight:800;cursor:pointer}
+    .primary{background:var(--accent);color:#fff}
+    .secondary{background:var(--accent2);color:var(--text)}
+    .hint{font-size:13px;color:var(--muted);line-height:1.8;margin-top:10px}
+    .result{white-space:pre-wrap;line-height:2;font-size:17px;min-height:280px}
+    .ok{color:#275c2f;font-weight:700}
+    .err{color:#9d2222;font-weight:700}
+    .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .pill{padding:8px 12px;border-radius:999px;background:#f3e8db;font-size:13px;font-weight:700;color:#5d4630}
+    @media (max-width:900px){.grid{grid-template-columns:1fr} h1{font-size:26px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>九宮命格完整分析生成器</h1>
+      <p class="sub">這版改成可直接輸入姓名，自動從字庫抓筆畫，再輸出你指定格式的完整分析文字。也支援你之後把更多字庫 JSON 直接貼進去擴充。</p>
+      <div class="bar">
+        <span class="pill">輸入姓名 → 自動查筆畫 → 直接分析</span>
+        <span class="pill">支援多段 JSON 字庫</span>
+        <span class="pill">一鍵複製結果</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <div class="title">輸入資料</div>
+        <label for="fullName">姓名</label>
+        <input id="fullName" type="text" placeholder="例如：匡怡如" />
+
+        <label for="strokeData">字庫 JSON</label>
+        <textarea id="strokeData"></textarea>
+        <div class="hint">這裡已經放入一版可直接用的字庫。你之後要補字，只要把新的 JSON 陣列直接貼進來就可以。若同一個字出現多次，系統會以最後一筆為主。</div>
+
+        <div class="btns">
+          <button class="primary" id="analyzeBtn">開始分析</button>
+          <button class="secondary" id="copyBtn">複製結果</button>
+          <button class="secondary" id="demoBtn">帶入範例</button>
+        </div>
+        <div id="status" class="hint">等待分析。</div>
+      </section>
+
+      <section class="card">
+        <div class="title">分析結果</div>
+        <div id="result" class="result">請先輸入姓名後按下「開始分析」。</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const defaultStrokeData = String.raw`[
+  {"字":"匡","總筆畫":6},
+  {"字":"怡","總筆畫":9},
+  {"字":"如","總筆畫":6},
+  {"字":"黃","總筆畫":12},
+  {"字":"仁","總筆畫":4},
+  {"字":"勳","總筆畫":16},
+  {"字":"泓","總筆畫":9},
+  {"字":"沐","總筆畫":8},
+  {"字":"涵","總筆畫":12},
+  {"字":"淳","總筆畫":11},
+  {"字":"清","總筆畫":11},
+  {"字":"源","總筆畫":13},
+  {"字":"潤","總筆畫":15},
+  {"字":"澄","總筆畫":15},
+  {"字":"楷","總筆畫":13},
+  {"字":"榆","總筆畫":13},
+  {"字":"槿","總筆畫":15},
+  {"字":"棋","總筆畫":12},
+  {"字":"楓","總筆畫":13},
+  {"字":"杉","總筆畫":7},
+  {"字":"柚","總筆畫":9},
+  {"字":"栩","總筆畫":10},
+  {"字":"霏","總筆畫":16},
+  {"字":"婉","總筆畫":11},
+  {"字":"嫙","總筆畫":14},
+  {"字":"瑤","總筆畫":15},
+  {"字":"璇","總筆畫":16},
+  {"字":"瓊","總筆畫":20},
+  {"字":"恒","總筆畫":9},
+  {"字":"堯","總筆畫":12},
+  {"字":"舜","總筆畫":12},
+  {"字":"鴻","總筆畫":17},
+  {"字":"宙","總筆畫":8},
+  {"字":"衡","總筆畫":16},
+  {"字":"鋒","總筆畫":15},
+  {"字":"鎧","總筆畫":18},
+  {"字":"然","總筆畫":12},
+  {"字":"希","總筆畫":7},
+  {"字":"禾","總筆畫":5},
+  {"字":"予","總筆畫":4},
+  {"字":"允","總筆畫":4},
+  {"字":"婧","總筆畫":11},
+  {"字":"嫚","總筆畫":14},
+  {"字":"嫣","總筆畫":14},
+  {"字":"妤","總筆畫":7},
+  {"字":"婕","總筆畫":11},
+  {"字":"婷","總筆畫":12},
+  {"字":"媛","總筆畫":12},
+  {"字":"嫻","總筆畫":15},
+  {"字":"妍","總筆畫":7},
+  {"字":"柔","總筆畫":9},
+  {"字":"芯","總筆畫":10},
+  {"字":"彤","總筆畫":7},
+  {"字":"睿","總筆畫":14},
+  {"字":"宸","總筆畫":10},
+  {"字":"軒","總筆畫":10},
+  {"字":"皓","總筆畫":12},
+  {"字":"宇","總筆畫":6},
+  {"字":"恩","總筆畫":10},
+  {"字":"辰","總筆畫":7},
+  {"字":"哲","總筆畫":10},
+  {"字":"廷","總筆畫":7},
+  {"字":"佑","總筆畫":7},
+  {"字":"承","總筆畫":8},
+  {"字":"昊","總筆畫":8},
+  {"字":"之","總筆畫":3},
+  {"字":"以","總筆畫":5},
+  {"字":"亦","總筆畫":6},
+  {"字":"可","總筆畫":5},
+  {"字":"子","總筆畫":3},
+  {"字":"若","總筆畫":11},
+  {"字":"安","總筆畫":6},
+  {"字":"思","總筆畫":9},
+  {"字":"言","總筆畫":7},
+  {"字":"昀","總筆畫":8},
+  {"字":"宥","總筆畫":9},
+  {"字":"霖","總筆畫":16},
+  {"字":"曜","總筆畫":18},
+  {"字":"澤","總筆畫":16},
+  {"字":"瑾","總筆畫":16},
+  {"字":"璟","總筆畫":17},
+  {"字":"珩","總筆畫":11},
+  {"字":"琛","總筆畫":13},
+  {"字":"瑄","總筆畫":14},
+  {"字":"璋","總筆畫":16},
+  {"字":"琮","總筆畫":12},
+  {"字":"阿","總筆畫":13},
+  {"字":"阮","總筆畫":12},
+  {"字":"附","總筆畫":13},
+  {"字":"陸","總筆畫":16},
+  {"字":"陽","總筆畫":17},
+  {"字":"邦","總筆畫":11},
+  {"字":"那","總筆畫":11},
+  {"字":"邵","總筆畫":12},
+  {"字":"郁","總筆畫":13},
+  {"字":"郡","總筆畫":14},
+  {"字":"都","總筆畫":16},
+  {"字":"鄭","總筆畫":19},
+  {"字":"利","總筆畫":7},
+  {"字":"別","總筆畫":7},
+  {"字":"刻","總筆畫":8},
+  {"字":"則","總筆畫":9},
+  {"字":"剛","總筆畫":10},
+  {"字":"創","總筆畫":12},
+  {"字":"力","總筆畫":2},
+  {"字":"功","總筆畫":5},
+  {"字":"加","總筆畫":5},
+  {"字":"助","總筆畫":7},
+  {"字":"勇","總筆畫":9},
+  {"字":"勉","總筆畫":9},
+  {"字":"又","總筆畫":2},
+  {"字":"友","總筆畫":4},
+  {"字":"反","總筆畫":4},
+  {"字":"取","總筆畫":8},
+  {"字":"受","總筆畫":8},
+  {"字":"序","總筆畫":7},
+  {"字":"度","總筆畫":9},
+  {"字":"庭","總筆畫":10},
+  {"字":"康","總筆畫":11},
+  {"字":"庸","總筆畫":11},
+  {"字":"尾","總筆畫":7},
+  {"字":"居","總筆畫":8},
+  {"字":"屏","總筆畫":9},
+  {"字":"展","總筆畫":10},
+  {"字":"山","總筆畫":3},
+  {"字":"岑","總筆畫":7},
+  {"字":"岩","總筆畫":8},
+  {"字":"岳","總筆畫":8},
+  {"字":"峰","總筆畫":10},
+  {"字":"崇","總筆畫":11},
+  {"字":"嵐","總筆畫":12},
+  {"字":"市","總筆畫":5},
+  {"字":"帆","總筆畫":6},
+  {"字":"席","總筆畫":10},
+  {"字":"常","總筆畫":11},
+  {"字":"食","總筆畫":9},
+  {"字":"養","總筆畫":15},
+  {"字":"餐","總筆畫":16},
+  {"字":"馬","總筆畫":10},
+  {"字":"馳","總筆畫":13},
+  {"字":"江","總筆畫":7},
+  {"字":"池","總筆畫":7},
+  {"字":"汝","總筆畫":7},
+  {"字":"河","總筆畫":9},
+  {"字":"治","總筆畫":9},
+  {"字":"泳","總筆畫":9},
+  {"字":"洋","總筆畫":10},
+  {"字":"海","總筆畫":11},
+  {"字":"淇","總筆畫":12},
+  {"字":"潔","總筆畫":16},
+  {"字":"木","總筆畫":4},
+  {"字":"本","總筆畫":5},
+  {"字":"未","總筆畫":5},
+  {"字":"末","總筆畫":5},
+  {"字":"朴","總筆畫":6},
+  {"字":"李","總筆畫":7},
+  {"字":"杏","總筆畫":7},
+  {"字":"林","總筆畫":8},
+  {"字":"柏","總筆畫":9},
+  {"字":"柳","總筆畫":9},
+  {"字":"桂","總筆畫":10},
+  {"字":"梓","總筆畫":11},
+  {"字":"森","總筆畫":12},
+  {"字":"金","總筆畫":8},
+  {"字":"釗","總筆畫":10},
+  {"字":"針","總筆畫":10},
+  {"字":"鈞","總筆畫":12},
+  {"字":"鈴","總筆畫":13},
+  {"字":"銘","總筆畫":14},
+  {"字":"錦","總筆畫":16},
+  {"字":"人","總筆畫":2},
+  {"字":"仕","總筆畫":5},
+  {"字":"他","總筆畫":5},
+  {"字":"代","總筆畫":5},
+  {"字":"令","總筆畫":5},
+  {"字":"仰","總筆畫":6},
+  {"字":"任","總筆畫":6},
+  {"字":"伊","總筆畫":6},
+  {"字":"伍","總筆畫":6},
+  {"字":"伯","總筆畫":7},
+  {"字":"佳","總筆畫":8},
+  {"字":"信","總筆畫":9},
+  {"字":"俊","總筆畫":9},
+  {"字":"偉","總筆畫":11},
+  {"字":"心","總筆畫":4},
+  {"字":"必","總筆畫":5},
+  {"字":"志","總筆畫":7},
+  {"字":"忠","總筆畫":8},
+  {"字":"念","總筆畫":8},
+  {"字":"恆","總筆畫":10},
+  {"字":"情","總筆畫":11},
+  {"字":"惠","總筆畫":12},
+  {"字":"計","總筆畫":9},
+  {"字":"訓","總筆畫":10},
+  {"字":"詠","總筆畫":13},
+  {"字":"誠","總筆畫":14},
+  {"字":"依","總筆畫":8},
+  {"字":"欣","總筆畫":8},
+  {"字":"菡","總筆畫":14},
+  {"字":"菀","總筆畫":14},
+  {"字":"曼","總筆畫":11},
+  {"字":"曉","總筆畫":16},
+  {"字":"馨","總筆畫":20},
+  {"字":"博","總筆畫":12},
+  {"字":"毅","總筆畫":15},
+  {"字":"霆","總筆畫":15},
+  {"字":"駿","總筆畫":17},
+  {"字":"宬","總筆畫":10},
+  {"字":"寧","總筆畫":14},
+  {"字":"樂","總筆畫":15}
+]`;
+
+    const palaceStars = {
+      1:['權星','管理、權力'],2:['相星','輔佐、紀律'],3:['車星','動力、速度'],4:['口舌星','傳達、亮麗'],5:['庫星','儲存、穩定'],6:['驛馬星','奔波、遠行'],7:['孤星','開發、獨立'],8:['事業星','實際、利益'],9:['五鬼星','變化、附合'],10:['文曲星','智慧、財富'],
+      11:['唯我星','權力、獨立'],12:['承接星','輔佐、管理'],13:['追擊星','動力、速度'],14:['天機星','思考、說服'],15:['福祿星','儲存、財庫'],16:['天馬星','貴人、信任'],17:['開發星','開創、突破'],18:['實力星','勤奮、踏實'],19:['奇發星','快速、轉向'],20:['文曲星','輔佐、智慧'],
+      21:['爭權星','奮鬥、競爭'],22:['文昌星','文書、制度'],23:['追隨星','勇往直前'],24:['福德星','福氣、機運'],25:['穩定星','穩定、守成'],26:['驛馬星','毅力、奔波'],27:['能力星','奮鬥、表現'],28:['官貴星','價值、功名'],29:['亂世星','亂中取勝'],30:['經營星','財富、金融'],
+      31:['奉獻星','活躍、付出'],32:['攀附星','配合、輔佐'],33:['背景星','靠山、選擇'],34:['承襲星','機運、接班'],35:['忙碌星','開源、創造'],36:['寵信星','扶持、資助'],37:['人際星','人際關係'],38:['賞識星','欣賞、重用'],39:['短發星','瞬間、閃亮'],40:['時代星','時局、價值'],
+      41:['天權星','信任、機運'],42:['天相星','知識、能力'],43:['獵戶星','毅力、堅持'],44:['光芒星','依附、光芒'],45:['變動星','突顯、變動'],46:['四海星','動力、活躍'],47:['官祿星','官氣、財祿'],48:['天貴星','格局、層級'],49:['無主星','自主、風格'],50:['天府星','才智、攀附'],
+      51:['晚發星','技術、潛力'],52:['困行星','環境限制'],53:['祿馬星','實力、引力'],54:['守業星','固守、資源']
+    };
+
+    const goalTexts = {
+      1:'今生前程不遠求，求官求祿永不休，緊跟貴人得第一，走出自我逍遙遊',
+      2:'問我今生走何路，勞勞碌碌皆辛苦，競競業業得天下，若想安逸全盤輸',
+      3:'不知前世是何物，投胎來此得福祿，士農工商我皆通，但求用心和惜福',
+      4:'志向大海一片天，將相侯王皆不限，欲知高峰在何處，只愛王權不羨仙',
+      0:'今生何處去發展，先求穩定與平安，若想更上一層樓，要有名氣或靠山'
+    };
+
+    const comboDefs = [
+      ['特殊頻率','心念磁場 + 屬下磁場 = 特殊頻率','mindset','team','你想要什麼就直接講，講了才會有人幫你。你越敢講，事情就越容易成。'],
+      ['特殊機運','創意元素 + 目標磁場 = 特殊機運','creative','goal','你先想好要幹嘛，機會就會慢慢出現。你敢去做你的想法，好事就會跟著來。'],
+      ['特殊格局','動力元素 + 目標磁場 = 特殊格局','drive','goal','你不是慢慢學的人，是一做就上手的人。環境越亂、變動越大，你反而越容易衝出來。'],
+      ['特殊權力','心念磁場 + 動力元素 = 特殊權力','mindset','drive','你心裡越想掌控，現實就越容易讓你有權力。你越敢爭、越敢上位，就越容易變成主導的人。'],
+      ['特殊魅力','創意元素 + 屬下磁場 = 特殊魅力','creative','team','你有想法敢講，就會有人被你吸過來幫你。你越敢秀自己，資源跟人就越會靠過來。'],
+      ['特殊音頻','創意元素 + 心念磁場 = 特殊音頻','creative','mindset','你現在講的話，可能身邊的人聽不懂，但外面的人會懂。你敢一直講你的理念，最後會變成一個領頭的人。'],
+      ['特殊帶動','動力元素 + 屬下磁場 = 特殊帶動','drive','team','你不是自己做強，是帶一群人一起變強。你只要開始做，大家就會自動跟上你。'],
+      ['特殊感應','心念磁場 + 目標磁場 = 特殊感應','mindset','goal','你常常會「有感覺」，而且通常都滿準的。你敢相信、敢講出來，就會有人開始認同你。'],
+      ['特殊運轉','創意元素 + 動力元素 = 特殊運轉','creative','drive','你想到的，不會停在腦袋，會開始動起來。你一開始做，後面就會自己慢慢運轉。']
+    ];
+
+    const el = id => document.getElementById(id);
+    el('strokeData').value = defaultStrokeData;
+
+    function normalizeValue(a,b){
+      let x = Math.abs(a - b);
+      return x < 5 ? x : 9 - x;
+    }
+
+    function parseStrokeData(raw){
+      const matches = raw.match(/\[[\s\S]*?\]/g);
+      if(!matches) throw new Error('字庫格式讀不到，請確認貼的是 JSON 陣列。');
+      const dict = {};
+      for(const part of matches){
+        const arr = JSON.parse(part);
+        for(const item of arr){
+          if(item && item['字'] && item['總筆畫'] != null){
+            dict[item['字']] = Number(item['總筆畫']);
+          }
+        }
+      }
+      return dict;
+    }
+
+    function getFiveElement(num){
+      const tail = num % 10;
+      if(tail === 1 || tail === 2) return '木';
+      if(tail === 3 || tail === 4) return '火';
+      if(tail === 5 || tail === 6) return '土';
+      if(tail === 7 || tail === 8) return '金';
+      return '水';
+    }
+
+    const sheng = {'木':'火','火':'土','土':'金','金':'水','水':'木'};
+    const ke = {'金':'木','木':'土','土':'水','水':'火','火':'金'};
+
+    function relation(a,b){
+      if(a === b) return `${a}旺`;
+      if(sheng[a] === b) return `${a}生${b}`;
+      if(ke[a] === b) return `${a}剋${b}`;
+      return `${a}${b}`;
+    }
+
+    function getStrokeByName(name, dict){
+      const chars = [...name.trim()];
+      if(chars.length !== 3) throw new Error('目前版本只支援三個字姓名。');
+      const [s,m1,m2] = chars;
+      const S = dict[s], M1 = dict[m1], M2 = dict[m2];
+      const missing = [];
+      if(S == null) missing.push(`姓氏「${s}」`);
+      if(M1 == null) missing.push(`名字第一字「${m1}」`);
+      if(M2 == null) missing.push(`名字第二字「${m2}」`);
+      if(missing.length) throw new Error(`找不到筆畫資料：${missing.join('、')}`);
+      return {S,M1,M2};
+    }
+
+    function analyze(){
+      try{
+        const name = el('fullName').value.trim();
+        if(!name) throw new Error('請先輸入姓名。');
+        const dict = parseStrokeData(el('strokeData').value);
+        const {S,M1,M2} = getStrokeByName(name, dict);
+
+        const P = S + 1;
+        const D = S + M1;
+        const C = M1 + M2;
+        const L = S + M1 + M2;
+
+        const creative = normalizeValue(P,D);
+        const mindset = normalizeValue(Math.floor(D/10), D%10);
+        const drive = normalizeValue(D,C);
+        const team = normalizeValue(Math.floor(C/10), C%10);
+        const goal = normalizeValue(Math.floor(L/10), L%10);
+
+        const thought = relation(getFiveElement(P), getFiveElement(D));
+        const action = relation(getFiveElement(D), getFiveElement(C));
+        const star = palaceStars[L] || ['未定義星','暫無對照'];
+        const poem = goalTexts[goal] || '目前沒有對應的人生啟示錄';
+
+        const geneValues = {creative, mindset, drive, team, goal};
+        const combos = comboDefs.filter(([, , a, b]) => geneValues[a] === geneValues[b]);
+
+        let text = `命格分析：${name}，命格排列：${P}/${D}/${C}/${L}，思想功能${thought}，行動功能${action}，命宮${L}為${star[0]}，象徵：${star[1]}，人生啟示錄：${poem}，成功基因${combos.length}條`;
+
+        if(combos.length === 0){
+          text = `命格分析：${name}，命格排列：${P}/${D}/${C}/${L}，思想功能${thought}，行動功能${action}，命宮${L}為${star[0]}，象徵：${star[1]}，人生啟示錄（目標磁場）：${poem}，成功基因0條。`;
+        } else {
+          text += '，\n\n';
+          text += combos.map((item, idx) => `${idx+1}.${item[1]}\n特色：「${item[4]}」`).join('\n\n');
+        }
+
+        el('result').textContent = text;
+        el('status').innerHTML = `<span class="ok">分析完成。</span> 已自動抓取筆畫：S=${S}、M1=${M1}、M2=${M2}。`;
+      }catch(err){
+        el('result').textContent = err.message;
+        el('status').innerHTML = `<span class="err">分析失敗：</span>${err.message}`;
+      }
+    }
+
+    el('analyzeBtn').addEventListener('click', analyze);
+    el('copyBtn').addEventListener('click', async () => {
+      try{
+        await navigator.clipboard.writeText(el('result').textContent);
+        el('status').innerHTML = `<span class="ok">已複製分析結果。</span>`;
+      }catch(err){
+        el('status').innerHTML = `<span class="err">複製失敗，請手動選取文字複製。</span>`;
+      }
+    });
+    el('demoBtn').addEventListener('click', () => {
+      el('fullName').value = '匡怡如';
+      analyze();
+    });
+  </script>
+</body>
+</html>
