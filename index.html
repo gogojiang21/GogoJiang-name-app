@@ -422,8 +422,8 @@ function describeFiveElements(elements){
       const diseaseEl = elementOf(D);
       const childEl = elementOf(C);
 
-      const thoughtFn = describeFiveElements([parentEl, diseaseEl, childEl]);
-      const actionFn = describeFiveElements([diseaseEl, childEl]);
+      const thoughtFn = relationOf(parentEl, diseaseEl);
+      const actionFn = relationOf(diseaseEl, childEl);
 
       const [starName, starMeaning] = lifeStarMap[L] || ["未知星","暫無對應"];
       const poem = goalPoemMap.hasOwnProperty(goal) ? goalPoemMap[goal] : "此目標磁場暫無對應人生啟示錄。";
