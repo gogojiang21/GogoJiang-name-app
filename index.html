@@ -403,35 +403,36 @@ function describeFiveElements(elements){
   return [...new Set([...special, ...same])].join("、");
 }
 
-    function parseName(fullName){
-      const name = fullName.trim();
-      if (!name) throw new Error("請先輸入姓名。");
+   function parseName(fullName){
+  const name = fullName.trim();
+  if (!name) throw new Error("請先輸入姓名。");
 
-      const sortedSurnames = Object.keys(surnameStrokeDict).sort((a,b)=>b.length-a.length);
-      const surname = sortedSurnames.find(s => name.startsWith(s));
-      if (!surname) throw new Error(`找不到姓氏筆畫：${name}`);
+  const sortedSurnames = Object.keys(surnameStrokeDict).sort((a,b)=>b.length-a.length);
+  const surname = sortedSurnames.find(s => name.startsWith(s));
+  if (!surname) throw new Error(`找不到姓氏筆畫：${name}`);
 
-      const given = name.slice(surname.length);
+  const given = name.slice(surname.length);
 
-if (given.length === 2) {
-  return {
-    surname,
-    given1: given[0],
-    given2: given[1],
-    isSingleName: false
-  };
-} else if (given.length === 1) {
-  return {
-    surname,
-    given1: given[0],
-    given2: null,
-    isSingleName: true
-  };
-} else {
-  throw new Error("請輸入：單姓雙名 或 單姓單名。");
-}
+  if (given.length === 2) {
+    return {
+      surname,
+      given1: given[0],
+      given2: given[1],
+      isSingleName: false
+    };
+  } else if (given.length === 1) {
+    return {
+      surname,
+      given1: given[0],
+      given2: null,
+      isSingleName: true
+    };
+  } else {
+    throw new Error("請輸入：單姓雙名 或 單姓單名。");
+  }
+}  //
 
-  function analyzeName(fullName){
+function analyzeName(fullName){
 
   if (!fullName.trim()) {
     throw new Error("請輸入姓名");
