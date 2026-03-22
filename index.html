@@ -326,18 +326,37 @@
       return "水";
     }
 
-    function relationOf(a,b){
-      if (a === b) return `${a}旺`;
-      const produce = {
-        "木":"火","火":"土","土":"金","金":"水","水":"木"
-      };
-      const control = {
-        "金":"木","木":"土","土":"水","水":"火","火":"金"
-      };
-      if (produce[a] === b) return `${a}生${b}`;
-      if (control[a] === b) return `${a}剋${b}`;
-      return `${a}${b}`;
-    }
+   function relationOf(a,b){
+  if (a === b) return `${a}旺`;
+
+  const produce = {
+    "木":"火",
+    "火":"土",
+    "土":"金",
+    "金":"水",
+    "水":"木"
+  };
+
+  const control = {
+    "金":"木",
+    "木":"土",
+    "土":"水",
+    "水":"火",
+    "火":"金"
+  };
+
+  // 先判斷正向相生
+  if (produce[a] === b) return `${a}生${b}`;
+  // 再判斷反向相生（自動調整順序）
+  if (produce[b] === a) return `${b}生${a}`;
+
+  // 先判斷正向相剋
+  if (control[a] === b) return `${a}剋${b}`;
+  // 再判斷反向相剋（自動調整順序）
+  if (control[b] === a) return `${b}剋${a}`;
+
+  return `${a}${b}`;
+}
     function sortElementsForDisplay(elements){
   const produceOrder = ["木","火","土","金","水"];
 
