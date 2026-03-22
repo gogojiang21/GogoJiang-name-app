@@ -338,6 +338,50 @@
       if (control[a] === b) return `${a}剋${b}`;
       return `${a}${b}`;
     }
+    function sortElementsForDisplay(elements){
+  const produceOrder = ["木","火","土","金","水"];
+
+  const counts = {};
+  elements.forEach(el => {
+    counts[el] = (counts[el] || 0) + 1;
+  });
+
+  const unique = [...new Set(elements)];
+
+  for (let i = 0; i < produceOrder.length; i++) {
+    const rotated = [...produceOrder.slice(i), ...produceOrder.slice(0, i)];
+    const filtered = rotated.filter(el => unique.includes(el));
+
+    if (filtered.length === unique.length) {
+      const result = [];
+      filtered.forEach(el => {
+        for (let j = 0; j < counts[el]; j++) {
+          result.push(el);
+        }
+      });
+      return result;
+    }
+  }
+
+  return elements;
+}
+
+function describeFiveElements(elements){
+  const sorted = sortElementsForDisplay(elements);
+  const special = [];
+  const same = [];
+
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const rel = relationOf(sorted[i], sorted[i + 1]);
+    if (rel.includes("生") || rel.includes("剋")) {
+      special.push(rel);
+    } else if (rel.includes("旺")) {
+      same.push(rel);
+    }
+  }
+
+  return [...new Set([...special, ...same])].join("、");
+}
 
     function parseName(fullName){
       const name = fullName.trim();
@@ -378,8 +422,8 @@
       const diseaseEl = elementOf(D);
       const childEl = elementOf(C);
 
-      const thoughtFn = relationOf(parentEl, diseaseEl);
-      const actionFn = relationOf(diseaseEl, childEl);
+      const thoughtFn = describeFiveElements([parentEl, diseaseEl, childEl]);
+      const actionFn = describeFiveElements([diseaseEl, childEl]);
 
       const [starName, starMeaning] = lifeStarMap[L] || ["未知星","暫無對應"];
       const poem = goalPoemMap.hasOwnProperty(goal) ? goalPoemMap[goal] : "此目標磁場暫無對應人生啟示錄。";
