@@ -308,14 +308,8 @@
 
    function normalizeDiff(a,b){
   let x = Math.abs(a - b);
-
-  // 九宮循環（關鍵）
   x = x % 9;
-
-  // 9 的倍數 → 視為 0
   if (x === 0) return 0;
-
-  // 5~8 反折
   return x >= 5 ? 9 - x : x;
 }
     function getDigitPairValue(n){
@@ -437,7 +431,7 @@ if (given.length === 2) {
   throw new Error("請輸入：單姓雙名 或 單姓單名。");
 }
 
-    function analyzeName(fullName){
+  function analyzeName(fullName){
 
   if (!fullName.trim()) {
     throw new Error("請輸入姓名");
@@ -448,44 +442,46 @@ if (given.length === 2) {
   if (typeof surnameStrokeDict[surname] !== "number") {
     throw new Error(`找不到姓氏筆畫：${surname}`);
   }
-const S = surnameStrokeDict[surname];
-const M1 = nameStrokeDict[given1];
 
-if (typeof M1 !== "number") throw new Error(`名字字庫缺字：${given1}`);
+  const S = surnameStrokeDict[surname];
+  const M1 = nameStrokeDict[given1];
 
-let M2 = null;
-if (!isSingleName) {
-  M2 = nameStrokeDict[given2];
-  if (typeof M2 !== "number") {
-    throw new Error(`名字字庫缺字：${given2}`);
+  if (typeof M1 !== "number") throw new Error(`名字字庫缺字：${given1}`);
+
+  let M2 = null;
+  if (!isSingleName) {
+    M2 = nameStrokeDict[given2];
+    if (typeof M2 !== "number") {
+      throw new Error(`名字字庫缺字：${given2}`);
+    }
   }
-}
 
-const P = S + 1;
-const D = S + M1;
-const C = isSingleName ? (M1 + 1) : (M1 + M2);
-const L = isSingleName ? (S + M1) : (S + M1 + M2);
+  const P = S + 1;
+  const D = S + M1;
+  const C = isSingleName ? (M1 + 1) : (M1 + M2);
+  const L = isSingleName ? (S + M1) : (S + M1 + M2);
 
-      const creative = normalizeDiff(P, D);
-      const mindset = getDigitPairValue(D);
-      const drive = normalizeDiff(D, C);
-      const team = getDigitPairValue(C);
-      const goal = getDigitPairValue(L);
+  const creative = normalizeDiff(P, D);
+  const mindset = getDigitPairValue(D);
+  const drive = normalizeDiff(D, C);
+  const team = getDigitPairValue(C);
+  const goal = getDigitPairValue(L);
 
-      const parentEl = elementOf(P);
-      const diseaseEl = elementOf(D);
-      const childEl = elementOf(C);
+  const parentEl = elementOf(P);
+  const diseaseEl = elementOf(D);
+  const childEl = elementOf(C);
 
-      const thoughtFn = relationOf(parentEl, diseaseEl);
-      const actionFn = relationOf(diseaseEl, childEl);
+  const thoughtFn = relationOf(parentEl, diseaseEl);
+  const actionFn = relationOf(diseaseEl, childEl);
 
-      const [starName, starMeaning] = lifeStarMap[L] || ["未知星","暫無對應"];
-      const poem = goalPoemMap.hasOwnProperty(goal) ? goalPoemMap[goal] : "此目標磁場暫無對應人生啟示錄。";
+  const [starName, starMeaning] = lifeStarMap[L] || ["未知星","暫無對應"];
+  const poem = goalPoemMap.hasOwnProperty(goal) ? goalPoemMap[goal] : "此目標磁場暫無對應人生啟示錄。";
 
-      const metrics = { creative, mindset, drive, team, goal };
-      const matchedGenes = geneRules.filter(rule => metrics[rule.keyA] === metrics[rule.keyB]);
+  const metrics = { creative, mindset, drive, team, goal };
+  const matchedGenes = geneRules.filter(rule => metrics[rule.keyA] === metrics[rule.keyB]);
 
-     let text = `命格分析：${fullName}
+  let text =
+`命格分析：${fullName}
 命格排列：${P}/${D}/${C}/${L}
 先天五行：${thoughtFn}
 後天五行：${actionFn}
@@ -495,8 +491,9 @@ ${starName}
 人生啟示錄：${poem}
 特殊基因：${matchedGenes.length}條：`;
 
-if (matchedGenes.length === 0){
-  text = `命格分析：${fullName}
+  if (matchedGenes.length === 0) {
+    text =
+`命格分析：${fullName}
 命格排列：${P}/${D}/${C}/${L}
 先天五行：${thoughtFn}
 後天五行：${actionFn}
@@ -505,20 +502,16 @@ ${starName}
 象徵：${starMeaning}
 人生啟示錄：${poem}
 特殊基因：0條。`;
-} else {
-  text += `\n\n`;
-  matchedGenes.forEach((g, i) => {
-    text += `${i+1}.${g.name}
-特色：「${g.text}」`;
-    if (i !== matchedGenes.length - 1) text += `\n\n`;
-  });
-}
+  } else {
+    text += "\n\n";
+    matchedGenes.forEach((g, i) => {
+      text += `${i + 1}.${g.name}\n特色：「${g.text}」`;
+      if (i !== matchedGenes.length - 1) text += "\n\n";
+    });
+  }
 
-      return {
-        P,D,C,L,
-        text
-      };
-    }
+  return { P, D, C, L, text };
+}
 
     const fullNameEl = document.getElementById("fullName");
     const resultEl = document.getElementById("result");
