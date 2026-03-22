@@ -114,7 +114,7 @@
       <h1>九宮命格完整分析</h1>
       <p class="sub">
         直接輸入姓名即可分析。<br>
-        系統會自動抓姓氏筆畫與名字字庫，輸出完整命格排列、成功基因、目標磁場、人生啟示錄與成功基因組合。
+        系統會自動抓姓氏筆畫與名字字庫，輸出完整命格排列、先天五行、後天五行、人生啟示錄與特殊基因特色。
       </p>
     </section>
 
@@ -153,7 +153,7 @@
       <div class="title">完整分析結果</div>
       <div id="result" class="result">請先輸入姓名，再按下「開始分析」。</div>
       <div class="footer-note">
-        這版已內建完整公式、命宮星座對照、人生啟示錄、成功基因組合規則。
+        這版已內建完整公式、命宮星座對照、人生啟示錄、特殊基因特色。
       </div>
     </section>
   </div>
@@ -260,47 +260,47 @@
     /* ========= 成功基因組合 ========= */
     const geneRules = [
       {
-        name:"心念磁場 + 屬下磁場 = 特殊頻率",
+        name:"特殊頻率",
         keyA:"mindset", keyB:"team",
         text:"你想要什麼就直接講，講了才會有人幫你。你越敢講，事情就越容易成。"
       },
       {
-        name:"創意元素 + 目標磁場 = 特殊機運",
+        name:"特殊機運",
         keyA:"creative", keyB:"goal",
         text:"你先想好要幹嘛，機會就會慢慢出現。你敢去做你的想法，好事就會跟著來。"
       },
       {
-        name:"動力元素 + 目標磁場 = 特殊格局",
+        name:"特殊格局",
         keyA:"drive", keyB:"goal",
         text:"你不是慢慢學的人，是一做就上手的人。環境越亂、變動越大，你反而越容易衝出來。"
       },
       {
-        name:"心念磁場 + 動力元素 = 特殊權力",
+        name:"特殊權力",
         keyA:"mindset", keyB:"drive",
         text:"你心裡越想掌控，現實就越容易讓你有權力。你越敢爭、越敢上位，就越容易變成主導的人。"
       },
       {
-        name:"創意元素 + 屬下磁場 = 特殊魅力",
+        name:"特殊魅力",
         keyA:"creative", keyB:"team",
         text:"你有想法敢講，就會有人被你吸過來幫你。你越敢秀自己，資源跟人就越會靠過來。"
       },
       {
-        name:"創意元素 + 心念磁場 = 特殊音頻",
+        name:"特殊音頻",
         keyA:"creative", keyB:"mindset",
         text:"你現在講的話，可能身邊的人聽不懂，但外面的人會懂。你敢一直講你的理念，最後會變成一個領頭的人。"
       },
       {
-        name:"動力元素 + 屬下磁場 = 特殊帶動",
+        name:"特殊帶動",
         keyA:"drive", keyB:"team",
         text:"你不是自己做強，是帶一群人一起變強。你只要開始做，大家就會自動跟上你。"
       },
       {
-        name:"心念磁場 + 目標磁場 = 特殊感應",
+        name:"特殊感應",
         keyA:"mindset", keyB:"goal",
         text:"你常常會有感覺，而且通常都滿準的。你敢相信、敢講出來，就會有人開始認同你。"
       },
       {
-        name:"創意元素 + 動力元素 = 特殊運轉",
+        name:"特殊運轉",
         keyA:"creative", keyB:"drive",
         text:"你想到的，不會停在腦袋，會開始動起來。你一開始做，後面就會自己慢慢運轉。"
       }
@@ -387,10 +387,10 @@
       const metrics = { creative, mindset, drive, team, goal };
       const matchedGenes = geneRules.filter(rule => metrics[rule.keyA] === metrics[rule.keyB]);
 
-      let text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，思想功能${thoughtFn}，行動功能${actionFn}，命宮${L}為${starName}，象徵：${starMeaning}，人生啟示錄：${poem}，成功基因${matchedGenes.length}條，`;
+      let text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，先天五行${thoughtFn}，後天五行${actionFn}，命宮${L}為${starName}，象徵：${starMeaning}，人生啟示錄：${poem}，成功基因${matchedGenes.length}條，`;
 
       if (matchedGenes.length === 0){
-        text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，思想功能${thoughtFn}，行動功能${actionFn}，命宮${L}為${starName}，象徵：${starMeaning}，人生啟示錄（目標磁場）：${poem}，成功基因0條。`;
+        text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，先天五行${thoughtFn}，後天五行${actionFn}，命宮${L}為${starName}，象徵：${starMeaning}，人生啟示錄（目標磁場）：${poem}，成功基因0條。`;
       } else {
         text += "\n\n";
         matchedGenes.forEach((g, i) => {
