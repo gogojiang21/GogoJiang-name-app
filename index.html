@@ -387,10 +387,10 @@
       const metrics = { creative, mindset, drive, team, goal };
       const matchedGenes = geneRules.filter(rule => metrics[rule.keyA] === metrics[rule.keyB]);
 
-      let text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，先天五行：${thoughtFn}，後天五行：${actionFn}，命宮${L}為${starName}，象徵：${starMeaning}，人生啟示錄：${poem}，成功基因：${matchedGenes.length}條，`;
+      let text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，先天五行：${thoughtFn}，後天五行：${actionFn}，命宮星座：${L}為${starName}，象徵：${starMeaning}，人生啟示錄：${poem}，特殊基因：${matchedGenes.length}條，`;
 
       if (matchedGenes.length === 0){
-        text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，先天五行：${thoughtFn}，後天五行：${actionFn}，命宮${L}為${starName}，象徵：${starMeaning}，人生啟示錄：${poem}，成功基因：0條。`;
+        text = `命格分析：${fullName}，命格排列：${P}/${D}/${C}/${L}，先天五行：${thoughtFn}，後天五行：${actionFn}，命宮星座：${L}為${starName}，象徵：${starMeaning}，人生啟示錄：${poem}，特殊基因：0條。`;
       } else {
         text += "\n\n";
         matchedGenes.forEach((g, i) => {
