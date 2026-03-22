@@ -418,25 +418,53 @@ function describeFiveElements(elements){
       if (!surname) throw new Error(`找不到姓氏筆畫：${name}`);
 
       const given = name.slice(surname.length);
-      if (given.length !== 2) throw new Error("目前需輸入：姓氏 + 兩個名字字。");
 
-      return { surname, given1: given[0], given2: given[1] };
-    }
+if (given.length === 2) {
+  return {
+    surname,
+    given1: given[0],
+    given2: given[1],
+    isSingleName: false
+  };
+} else if (given.length === 1) {
+  return {
+    surname,
+    given1: given[0],
+    given2: null,
+    isSingleName: true
+  };
+} else {
+  throw new Error("請輸入：單姓雙名 或 單姓單名。");
+}
 
     function analyzeName(fullName){
-      const { surname, given1, given2 } = parseName(fullName);
 
-      const S = surnameStrokeDict[surname];
-      const M1 = nameStrokeDict[given1];
-      const M2 = nameStrokeDict[given2];
+  if (!fullName.trim()) {
+    throw new Error("請輸入姓名");
+  }
 
-      if (typeof M1 !== "number") throw new Error(`名字字庫缺字：${given1}`);
-      if (typeof M2 !== "number") throw new Error(`名字字庫缺字：${given2}`);
+  const { surname, given1, given2, isSingleName } = parseName(fullName);
 
-      const P = S + 1;
-      const D = S + M1;
-      const C = M1 + M2;
-      const L = S + M1 + M2;
+  if (typeof surnameStrokeDict[surname] !== "number") {
+    throw new Error(`找不到姓氏筆畫：${surname}`);
+  }
+const S = surnameStrokeDict[surname];
+const M1 = nameStrokeDict[given1];
+
+if (typeof M1 !== "number") throw new Error(`名字字庫缺字：${given1}`);
+
+let M2 = null;
+if (!isSingleName) {
+  M2 = nameStrokeDict[given2];
+  if (typeof M2 !== "number") {
+    throw new Error(`名字字庫缺字：${given2}`);
+  }
+}
+
+const P = S + 1;
+const D = S + M1;
+const C = isSingleName ? (M1 + 1) : (M1 + M2);
+const L = isSingleName ? (S + M1) : (S + M1 + M2);
 
       const creative = normalizeDiff(P, D);
       const mindset = getDigitPairValue(D);
