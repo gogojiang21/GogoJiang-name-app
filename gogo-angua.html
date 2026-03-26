@@ -1,1 +1,595 @@
 
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gogo 安卦系統</title>
+<style>
+:root{
+  --bg:#f7f3ee;
+  --card:#fffdfa;
+  --line:#dfd3c5;
+  --text:#3e2f25;
+  --muted:#7a6758;
+  --accent:#8c6a43;
+  --accent2:#e8ded2;
+  --ok:#2f7d4f;
+  --err:#9d2a22;
+  --shadow:0 12px 30px rgba(80,60,40,.10);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  background:linear-gradient(180deg,#f8f4ef 0%,#f2ebe2 100%);
+  color:var(--text);
+}
+.wrap{
+  max-width:1200px;
+  margin:0 auto;
+  padding:24px 16px 40px;
+}
+.hero{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:16px;
+}
+h1{margin:0 0 8px;font-size:34px}
+.sub{color:var(--muted);line-height:1.8}
+.grid{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:16px;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+h2{
+  font-size:20px;
+  margin:0 0 14px;
+}
+label{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  color:var(--muted);
+  margin:10px 0 8px;
+}
+input{
+  width:100%;
+  padding:13px 12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  font-size:18px;
+  background:#fff;
+}
+.row3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+button{
+  border:0;
+  border-radius:14px;
+  padding:12px 16px;
+  font-weight:800;
+  cursor:pointer;
+}
+.primary{background:var(--accent);color:#fff}
+.secondary{background:var(--accent2);color:var(--text)}
+.result-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.result{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+}
+.result.full{grid-column:1/-1}
+.k{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:6px;
+}
+.v{
+  font-size:26px;
+  font-weight:900;
+  line-height:1.35;
+}
+.v.small{font-size:18px;font-weight:800}
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:14px;
+}
+.table th,.table td{
+  border:1px solid var(--line);
+  padding:10px;
+  text-align:left;
+  vertical-align:top;
+}
+.table th{
+  background:#faf6f0;
+  width:130px;
+}
+.box-note{
+  margin-top:14px;
+  padding:14px;
+  border:1px dashed var(--line);
+  border-radius:14px;
+  background:#fff;
+  line-height:1.8;
+  white-space:pre-wrap;
+}
+.placeholder{
+  color:var(--muted);
+}
+.good{color:var(--ok);font-weight:900}
+.bad{color:var(--err);font-weight:900}
+@media (max-width:920px){
+  .grid{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Gogo 安卦系統</h1>
+    <div class="sub">
+      這一版依照目前規則先完成：元神、日辰、上卦、下卦、卦象、主口訣、陽宅口訣、身體卦、吉祥卦、合卦、沖卦、變動爻。<br>
+      左邊那一區的安卦細項與變動爻細項，先保留欄位，等你補完整規則後再接上。
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>輸入資料</h2>
+      <label>當天日期</label>
+      <input id="date" type="number" min="1" max="31" value="29">
+
+      <label>第一排（三個數字，由左到右）</label>
+      <div class="row3">
+        <input id="a1" type="number" min="0" max="9" value="9">
+        <input id="a2" type="number" min="0" max="9" value="8">
+        <input id="a3" type="number" min="0" max="9" value="7">
+      </div>
+
+      <label>第二排（三個數字，由左到右）</label>
+      <div class="row3">
+        <input id="b1" type="number" min="0" max="9" value="4">
+        <input id="b2" type="number" min="0" max="9" value="0">
+        <input id="b3" type="number" min="0" max="9" value="5">
+      </div>
+
+      <div class="actions">
+        <button class="primary" onclick="runCalc()">開始安卦</button>
+        <button class="secondary" onclick="fillExample()">帶入案例</button>
+        <button class="secondary" onclick="clearForm()">清空</button>
+      </div>
+
+      <div class="box-note">流程
+1. 填寫日期
+2. 填入兩排三個數字
+3. 系統自動分析：元神、日辰、上卦、下卦、卦象、口訣
+4. 再補：陽宅口訣、身體卦、吉祥卦、合卦、沖卦、變動爻
+5. 左邊安卦細項欄位先保留，等你補規則後接上</div>
+    </section>
+
+    <section class="card">
+      <h2>結果輸出</h2>
+      <div class="result-grid">
+        <div class="result"><div class="k">日辰</div><div id="rRi" class="v">—</div></div>
+        <div class="result"><div class="k">元神</div><div id="rYuan" class="v">—</div></div>
+        <div class="result"><div class="k">卦象</div><div id="rGua" class="v">—</div></div>
+
+        <div class="result"><div class="k">上卦</div><div id="rTop" class="v">—</div></div>
+        <div class="result"><div class="k">下卦</div><div id="rBottom" class="v">—</div></div>
+        <div class="result"><div class="k">吉祥卦</div><div id="rLucky" class="v small">—</div></div>
+
+        <div class="result full"><div class="k">主口訣</div><div id="rMain" class="v small">—</div></div>
+        <div class="result full"><div class="k">陽宅口訣</div><div id="rHouse" class="v small">—</div></div>
+        <div class="result full"><div class="k">身體卦口訣</div><div id="rBody" class="v small">—</div></div>
+
+        <div class="result"><div class="k">合卦</div><div id="rHe" class="v small">—</div></div>
+        <div class="result"><div class="k">沖卦</div><div id="rChong" class="v small">—</div></div>
+        <div class="result"><div class="k">變動爻</div><div id="rChange" class="v small">—</div></div>
+
+        <div class="result full"><div class="k">安卦（待補）</div><div class="v small placeholder">爻象、卦數、五行、六神：等待你補規則</div></div>
+        <div class="result full"><div class="k">變動爻細項（待補）</div><div class="v small placeholder">爻象、卦數、五行：等待你補規則</div></div>
+      </div>
+
+      <table class="table">
+        <tr><th>主卦說明</th><td id="detailMain">—</td></tr>
+        <tr><th>關係判定</th><td id="detailRelation">—</td></tr>
+        <tr><th>補充判斷</th><td id="detailExtra">—</td></tr>
+      </table>
+
+      <div id="notes" class="box-note">按下「開始安卦」後，這裡會顯示完整推演過程。</div>
+    </section>
+  </div>
+</div>
+
+<script>
+const MAIN = {
+  "胎,名":["太極卦","四象氣集太極宮，亂搶亂得一場空"],
+  "胎,財":["套牢卦","落葉時節求此卦，進得籠中出得難"],
+  "胎,官":["承接卦","承接一切看前例，若是二胎必大吉"],
+  "胎,利":["作夢卦","曙光一現乍現天，就恐造成南柯夢"],
+  "胎,交":["天地卦","天地分清要正氣，脫胎換骨平地起"],
+  "胎,敗":["求藏卦","昏天暗地事難解，求藏容易求脫難"],
+  "胎,衰":["回報卦","福德氣象專造地，得到佛緣搶不急"],
+  "胎,煞":["流產卦","煩煩雜雜是生機，要搶必有胎落地"],
+  "胎,絕":["小利卦","活氣出現暗顯機，少接無傷造有利"],
+
+  "養,名":["兩儀卦","陰陽兩儀交互替，年初不順年冬吉"],
+  "養,財":["守成卦","問說諸事如何辦，只言守成可平安"],
+  "養,官":["貪心卦","氣壓下降非真蹟，貪心不足撐破皮"],
+  "養,利":["驚險卦","苦果徐徐佈滿天，渡得有驚卻無險"],
+  "養,交":["轉機卦","天窗一開新鮮氣，仲夏過後大轉機"],
+  "養,敗":["投機卦","黑暗煞神包圍中，投得短機虧雙空"],
+  "養,衰":["賜福卦","天官賜福在年初，喜事可遇禍不求"],
+  "養,煞":["額外卦","紛紛爭爭外相親，多得一份苦煞心"],
+  "養,絕":["空歡卦","處處天象皆是虛，接得招來空歡喜"],
+
+  "長生,名":["小得卦","天上星星先女花，撿得小利得小發"],
+  "長生,財":["正財卦","暗暗吸收緩緩落，閣內成長賺得多"],
+  "長生,官":["無尾卦","呱呱落地袍與冠，定是溥儀或劉禪"],
+  "長生,利":["奮鬥卦","聞雞起舞見祖逖，圖強有成靠自己"],
+  "長生,交":["苦成卦","辛苦成長各參半，更上層樓在後段"],
+  "長生,敗":["是非卦","暗夜偷生異地喜，奈何回鄉滿城雨"],
+  "長生,衰":["再生卦","天顯神機來相助，求得重生現江湖"],
+  "長生,煞":["假象卦","內有困象外有機，恐是一片假象起"],
+  "長生,絕":["突圍卦","四面楚歌十面伏，衝出重圍江東哭"],
+
+  "冠帶,名":["名望卦","威震九州是二爺，光芒四射怕引蝶"],
+  "冠帶,財":["抑制卦","下了金牌壓岳飛，沖天之志要收回"],
+  "冠帶,官":["升官卦","盜得玉璽助帝王，獲得兵符又加冠"],
+  "冠帶,利":["破財卦","看似一片好地帶，左挖右墾總破財"],
+  "冠帶,交":["追損卦","日正當中我當紅，夸父追日飲長空"],
+  "冠帶,敗":["過氣卦","黑夜魑魅飄忽忽，一將功成萬骨枯"],
+  "冠帶,衰":["不誠卦","神仙護佑誠心客，枉然獨闖難有格"],
+  "冠帶,煞":["忙碌卦","帥喜印來將要旗，一夫當關萬人敵"],
+  "冠帶,絕":["斷後卦","世外桃源似奇蹟，忙得前段無後期"],
+
+  "臨官,名":["名聲卦","機到同時運當前，二郎神邊哮天犬"],
+  "臨官,財":["曇花卦","撥得雲開見月圓，就怕好景曇花現"],
+  "臨官,官":["兼差卦","機會出現有兩三，寧可雙兼不要轉"],
+  "臨官,利":["追擊卦","春雨綿綿偶晴天，趁勝追擊在當前"],
+  "臨官,交":["翻身卦","魚躍龍門新身換，除舊佈新得滿貫"],
+  "臨官,敗":["盜取卦","寒夜深深行急急，若非盜取亦投機"],
+  "臨官,衰":["祖德卦","二品官爵諸君要，祖上有德貴人罩"],
+  "臨官,煞":["苦渡卦","前有惡煞後有虎，此關渡得真辛苦"],
+  "臨官,絕":["奔馳卦","赤兔神駒風和配，日奔千里不覺累"],
+
+  "帝旺,名":["登峰卦","登峰謙卑可造極，求名得名利得利"],
+  "帝旺,財":["努力卦","金銀寶物在地底，努力挖掘莫猜疑"],
+  "帝旺,官":["強敵卦","更上層樓已艱辛，奈何又現程咬金"],
+  "帝旺,利":["無果卦","一片荒涼無邊際，種得花果古來稀"],
+  "帝旺,交":["實虛卦","高峰轉變有時機，前段當實後段虛"],
+  "帝旺,敗":["遭忌卦","運上天道氣落地，亢龍有悔遭人忌"],
+  "帝旺,衰":["奇蹟卦","不管機會排第幾，此去前程有奇蹟"],
+  "帝旺,煞":["接替卦","加官進爵是天意，死了君王我接替"],
+  "帝旺,絕":["根基卦","想再多闖新天地，一切成敗看根基"],
+
+  "衰,名":["因果卦","機運當強論成敗，努力回顧前五載"],
+  "衰,財":["忌貪卦","有氣無力節節退，貪得無驗必自毀"],
+  "衰,官":["栽培卦","升官機會前等待，求得貴人把我栽"],
+  "衰,利":["退隱卦","緩緩衰退名難再，不如修道或吃齋"],
+  "衰,交":["外鄉卦","此卦不動會倦怠，往外發展兩冬開"],
+  "衰,敗":["衰敗卦","有人說我是鰲拜，氣數將盡年底來"],
+  "衰,衰":["短發卦","老怕空名利不來，中年達官無三載"],
+  "衰,煞":["能力卦","機會是好也是壞，看我賢能或庸才"],
+  "衰,絕":["回收卦","此段回收財官利，持續努力會升級"],
+
+  "病,名":["良臣卦","眾星拱月可上任，左右護法得良臣"],
+  "病,財":["經營卦","七分利來三分債，堅守經營可旺財"],
+  "病,官":["圖利卦","原封不動難相處，轉變必有利可圖"],
+  "病,利":["失蹄卦","今日風采不如昔，四戰三敗馬失蹄"],
+  "病,交":["不定卦","多雲陣雨不定天，早敗年底晚三年"],
+  "病,敗":["多病卦","體弱多病又老邁，雪上加霜真無奈"],
+  "病,衰":["變節卦","錦上添花雖封侯，變節之心已難收"],
+  "病,煞":["賠本卦","安排設計來招親，賠了夫人又折兵"],
+  "病,絕":["斷足卦","交錯朋友失雙腿，借問足下可幫誰"],
+
+  "死,名":["功名卦","日月同光有奇蹟，但求功名不求利"],
+  "死,財":["斷頭卦","堅守資源在本州，強行出擊必斷頭"],
+  "死,官":["層級卦","龍有龍行虎有步，老鼠最盛在暗處"],
+  "死,利":["野心卦","鵲巢易主鳩來佔，野心勃勃速成難"],
+  "死,交":["轉世卦","山窮水盡疑無路，柳暗花明又一村"],
+  "死,敗":["暗渡卦","案渡陳倉免遭殃，惡名昭彰在本鄉"],
+  "死,衰":["機運卦","機運貴人南與西，尊上親下做幾許"],
+  "死,煞":["無依卦","曾經風雲功已過，今恐貶官又枷鎖"],
+  "死,絕":["放棄卦","放棄一切覓新路，怎知此步會大輸"],
+
+  "絕,名":["虛名卦","有人送終有人拱，徒有虛名一場空"],
+  "絕,財":["包袱卦","引狼入室變包袱，沉迷最愛必大輸"],
+  "絕,官":["困灘卦","龍困乾凅難伸展，養精蓄銳勿上灘"],
+  "絕,利":["未開卦","今想還陽又何奈，只是生門打不開"],
+  "絕,交":["過時卦","飛龍在天已過時，再闖天關必有失"],
+  "絕,敗":["烏雲卦","陷進泥沼無支撐，又逢滿天烏雲層"],
+  "絕,衰":["貴人卦","我本無心再期待，怎知貴人要安排"],
+  "絕,煞":["忠誠卦","人生自古誰無死，留取丹心照汗青"],
+  "絕,絕":["靜觀卦","不急不忙靜觀望，守住舊業勝新闖"]
+};
+
+const HOUSE = {
+  "冠帶":"冠帶之屋因人異，強者旺盛弱悲哀",
+  "臨官":"臨官帝旺莫猜疑，祿壽雙全又大吉",
+  "帝旺":"臨官帝旺莫猜疑，祿壽雙全又大吉",
+  "衰":"衰是福地貴人居，一切順利有暗財",
+  "病":"病卦出現家最亂，雞犬不寧有禍災",
+  "死":"死為困象絕為空，血光暗藏運不開",
+  "絕":"死為困象絕為空，血光暗藏運不開",
+  "胎":"胎養落地喜新宅，長生居住平安來",
+  "養":"胎養落地喜新宅，長生居住平安來",
+  "長生":"胎養落地喜新宅，長生居住平安來"
+};
+
+const BODY = {
+  "冠帶":"一切病況看冠帶",
+  "臨官":"臨官帝旺解病災",
+  "帝旺":"臨官帝旺解病災",
+  "衰":"衰是平安養等待",
+  "病":"初怕病復怕胎",
+  "死":"意外最愁死地絕為",
+  "絕":"意外最愁死地絕為",
+  "胎":"初怕病復怕胎",
+  "養":"衰是平安養等待",
+  "長生":"重症長生見棺材"
+};
+
+const CHANGE = {
+  1:"1爻變動運藏空",
+  2:"2爻變動口舌送",
+  3:"3爻變動驛馬動",
+  4:"4爻變動機運逢",
+  5:"5爻變動易掌控",
+  6:"6爻變動有爭訟",
+  7:"7爻變動困守中",
+  8:"8爻變動創意濃",
+  9:"9爻變動亂重重"
+};
+
+const chanceOrder = ["名","財","官","利","交","敗","衰","煞","絕"];
+const flowOrder = ["冠帶","臨官","帝旺","衰","病","死","絕","胎","養","長生"];
+const luckyPairs = new Set(["冠帶+排斥","臨官+實養","帝旺+虛養","衰+正財","病+暗財","死+強官","絕+弱官","胎+真造","養+假造","長生+斥合"]);
+
+function getNum(id){
+  return Number(document.getElementById(id).value);
+}
+function digitalRoot(n){
+  let x = Math.abs(Number(n)||0);
+  while (x >= 10){
+    x = String(x).split("").reduce((a,b)=>a+Number(b),0);
+  }
+  return x;
+}
+function cycleOffset(start,target,max){
+  let offset = 0;
+  let cur = start;
+  while (cur !== target){
+    cur += 1;
+    if (cur > max) cur = 1;
+    offset += 1;
+    if (offset > 100) break;
+  }
+  return offset;
+}
+function getTopGua(yuan, ri){
+  return chanceOrder[cycleOffset(yuan, ri, 9)];
+}
+function getBottomGua(yuan, tail){
+  const start = yuan === 0 ? 10 : yuan;
+  const target = tail === 0 ? 10 : tail;
+  return flowOrder[cycleOffset(start, target, 10)];
+}
+function getElement(n){
+  if ([1,2].includes(n)) return "木";
+  if ([3,4].includes(n)) return "火";
+  if ([5,6].includes(n)) return "土";
+  if ([7,8].includes(n)) return "金";
+  if ([9,0].includes(n)) return "水";
+  return "";
+}
+function isGenerate(a,b){
+  const map = {"木":"火","火":"土","土":"金","金":"水","水":"木"};
+  return map[a] === b;
+}
+function isControl(a,b){
+  const map = {"金":"木","木":"土","土":"水","水":"火","火":"金"};
+  return map[a] === b;
+}
+function sameParity(a,b){
+  return (a % 2) === (b % 2);
+}
+function getGua(topNum,bottomNum){
+  const topEl = getElement(topNum);
+  const bottomEl = getElement(bottomNum);
+  const same = sameParity(topNum,bottomNum);
+  const sameEl = topEl === bottomEl;
+
+  if (isGenerate(topEl,bottomEl) && same) return "真造";
+  if (isGenerate(topEl,bottomEl) && !same) return "假造";
+  if (isGenerate(bottomEl,topEl) && !same) return "實養";
+  if (isGenerate(bottomEl,topEl) && same) return "虛養";
+  if (sameEl && topNum === bottomNum && same) return "排斥";
+  if (sameEl && topNum !== bottomNum) return "斥合";
+  if (isControl(bottomEl,topEl) && !same) return "正財";
+  if (isControl(bottomEl,topEl) && same) return "暗財";
+  if (isControl(topEl,bottomEl) && same) return "強官";
+  if (isControl(topEl,bottomEl) && !same) return "弱官";
+  return "未知";
+}
+function getMain(bottom, top){
+  return MAIN[`${bottom},${top}`] || null;
+}
+function isLucky(bottom, gua){
+  return luckyPairs.has(`${bottom}+${gua}`);
+}
+function getHeGua(topNum,bottomNum){
+  if ((topNum===1 || topNum===2) && (bottomNum===5 || bottomNum===6)) return "合卦";
+  if ((topNum===7 || topNum===8) && (bottomNum===1 || bottomNum===2)) return "合卦";
+  if ((topNum===3 || topNum===4) && (bottomNum===7 || bottomNum===8)) return "合卦";
+  if ((topNum===9 || topNum===0) && (bottomNum===3 || bottomNum===4)) return "合卦";
+  if ((topNum===5 || topNum===6) && (bottomNum===9 || bottomNum===0)) return "合卦";
+  return "否";
+}
+function getChong(topNum,bottomNum,gua){
+  const strong = ["強官","弱官"];
+  const money = ["正財","暗財"];
+
+  if (topNum===8 && bottomNum===1){
+    if (strong.includes(gua)) return "遭非議";
+    if (money.includes(gua)) return "遭奪取";
+  }
+  if (topNum===2 && bottomNum===5){
+    if (strong.includes(gua)) return "有阻礙";
+    if (money.includes(gua)) return "有困擾";
+  }
+  if (topNum===6 && bottomNum===9){
+    if (strong.includes(gua)) return "事遲緩";
+    if (money.includes(gua)) return "自投網";
+  }
+  if (topNum===0 && bottomNum===3){
+    if (strong.includes(gua)) return "破傷亡";
+    if (money.includes(gua)) return "暗刑喪";
+  }
+  if (topNum===4 && bottomNum===7){
+    if (strong.includes(gua)) return "多變化";
+    if (money.includes(gua)) return "腳亂踏";
+  }
+  return "否";
+}
+function getChange(yuan, nums){
+  return nums.includes(yuan) ? (CHANGE[yuan] || "有變動") : "無";
+}
+
+function runCalc(){
+  const date = getNum("date");
+  const nums = [getNum("a1"),getNum("a2"),getNum("a3"),getNum("b1"),getNum("b2"),getNum("b3")];
+
+  if (!Number.isInteger(date) || date < 1 || date > 31){
+    alert("日期請輸入 1 到 31。");
+    return;
+  }
+  if (!nums.every(n => Number.isInteger(n) && n >= 0 && n <= 9)){
+    alert("六個數字都要是 0 到 9。");
+    return;
+  }
+
+  const ri = digitalRoot(date);
+  const yuan = digitalRoot(getNum("a1")+getNum("a2")+getNum("a3"));
+  const top = getTopGua(yuan, ri);
+  const bottom = getBottomGua(yuan, getNum("b3"));
+  const gua = getGua(getNum("a3"), getNum("b3"));
+  const main = getMain(bottom, top);
+  const house = HOUSE[bottom] || "—";
+  const body = BODY[bottom] || "—";
+  const lucky = isLucky(bottom, gua);
+  const he = getHeGua(getNum("a3"), getNum("b3"));
+  const chong = getChong(getNum("a3"), getNum("b3"), gua);
+  const change = getChange(yuan, nums);
+
+  document.getElementById("rRi").textContent = ri;
+  document.getElementById("rYuan").textContent = yuan;
+  document.getElementById("rTop").textContent = top;
+  document.getElementById("rBottom").textContent = bottom;
+  document.getElementById("rGua").textContent = gua;
+  document.getElementById("rLucky").innerHTML = lucky ? '<span class="good">吉祥卦成立</span>' : '<span class="bad">否</span>';
+  document.getElementById("rMain").textContent = main ? `${main[0]}：${main[1]}` : "查無對應口訣";
+  document.getElementById("rHouse").textContent = `${bottom}：${house}`;
+  document.getElementById("rBody").textContent = `${bottom}：${body}`;
+  document.getElementById("rHe").textContent = he;
+  document.getElementById("rChong").textContent = chong;
+  document.getElementById("rChange").textContent = change;
+
+  const topEl = getElement(getNum("a3"));
+  const bottomEl = getElement(getNum("b3"));
+  let relation = "無";
+  if (isGenerate(topEl,bottomEl)) relation = "上排生下排";
+  else if (isGenerate(bottomEl,topEl)) relation = "下排生上排";
+  else if (topEl === bottomEl) relation = "同五行";
+  else if (isControl(topEl,bottomEl)) relation = "上排剋下排";
+  else if (isControl(bottomEl,topEl)) relation = "下排剋上排";
+
+  document.getElementById("detailMain").textContent = main
+    ? `下卦 ${bottom} + 上卦 ${top} → ${main[0]}：${main[1]}`
+    : "目前查不到對應主口訣。";
+
+  document.getElementById("detailRelation").textContent =
+    `第一排尾數 ${getNum("a3")}（${topEl}），第二排尾數 ${getNum("b3")}（${bottomEl}）。五行關係：${relation}；奇偶：${sameParity(getNum("a3"),getNum("b3")) ? "同奇偶" : "異奇偶"}。故卦象為：${gua}。`;
+
+  document.getElementById("detailExtra").textContent =
+    `陽宅口訣：${house}
+身體卦口訣：${body}
+吉祥卦：${lucky ? "是" : "否"}
+合卦：${he}
+沖卦：${chong}
+變動爻：${change}`;
+
+  document.getElementById("notes").textContent =
+`推演過程
+日期：${date} → 日辰：${ri}
+第一排：${getNum("a1")}、${getNum("a2")}、${getNum("a3")} → 合計 ${getNum("a1")+getNum("a2")+getNum("a3")} → 元神：${yuan}
+元神推日辰 → 上卦：${top}
+元神推第二排尾數 ${getNum("b3")} → 下卦：${bottom}
+
+尾數推卦
+第一排尾數：${getNum("a3")}（${topEl}）
+第二排尾數：${getNum("b3")}（${bottomEl}）
+五行關係：${relation}
+奇偶關係：${sameParity(getNum("a3"),getNum("b3")) ? "同奇偶" : "異奇偶"}
+最終卦象：${gua}
+
+主口訣：${main ? main[0] + "＊" + main[1] : "查無"}`;
+}
+
+function fillExample(){
+  document.getElementById("date").value = 29;
+  document.getElementById("a1").value = 9;
+  document.getElementById("a2").value = 8;
+  document.getElementById("a3").value = 7;
+  document.getElementById("b1").value = 4;
+  document.getElementById("b2").value = 0;
+  document.getElementById("b3").value = 5;
+  runCalc();
+}
+
+function clearForm(){
+  document.getElementById("date").value = "";
+  ["a1","a2","a3","b1","b2","b3"].forEach(id => document.getElementById(id).value = "");
+  ["rRi","rYuan","rTop","rBottom","rGua","rHe","rChong","rChange"].forEach(id => document.getElementById(id).textContent = "—");
+  document.getElementById("rLucky").textContent = "—";
+  document.getElementById("rMain").textContent = "—";
+  document.getElementById("rHouse").textContent = "—";
+  document.getElementById("rBody").textContent = "—";
+  document.getElementById("detailMain").textContent = "—";
+  document.getElementById("detailRelation").textContent = "—";
+  document.getElementById("detailExtra").textContent = "—";
+  document.getElementById("notes").textContent = "按下「開始安卦」後，這裡會顯示完整推演過程。";
+}
+
+fillExample();
+</script>
+</body>
+</html>
