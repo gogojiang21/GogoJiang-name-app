@@ -540,9 +540,7 @@ function runCalc(){
     ? `下卦 ${bottom} + 上卦 ${top} → ${main[0]}：${main[1]}`
     : "目前查不到對應主口訣。";
 
-  document.getElementById("detailRelation").textContent =
-    `第一排尾數 ${getNum("a3")}（${topEl}），第二排尾數 ${getNum("b3")}（${bottomEl}）。五行關係：${relation}；奇偶：${sameParity(getNum("a3"),getNum("b3")) ? "同奇偶" : "異奇偶"}。故卦象為：${gua}。`;
-
+ document.getElementById("detailRelation").textContent = "";
   document.getElementById("detailExtra").textContent =
     `陽宅口訣：${house}
 身體卦口訣：${body}
@@ -551,19 +549,7 @@ function runCalc(){
 沖卦：${chong}
 變動爻：${change}`;
 
-  document.getElementById("notes").textContent =
-`推演過程
-日期：${date} → 日辰：${ri}
-第一排：${getNum("a1")}、${getNum("a2")}、${getNum("a3")} → 合計 ${getNum("a1")+getNum("a2")+getNum("a3")} → 元神：${yuan}
-元神推日辰 → 上卦：${top}
-元神推第二排尾數 ${getNum("b3")} → 下卦：${bottom}
-
-尾數推卦
-第一排尾數：${getNum("a3")}（${topEl}）
-第二排尾數：${getNum("b3")}（${bottomEl}）
-五行關係：${relation}
-奇偶關係：${sameParity(getNum("a3"),getNum("b3")) ? "同奇偶" : "異奇偶"}
-最終卦象：${gua}
+  document.getElementById("notes").textContent = "";
 
 主口訣：${main ? main[0] + "＊" + main[1] : "查無"}`;
 }
