@@ -41,7 +41,7 @@ p, label {
   .hero{
   background: rgba(20, 20, 30, 0.6);
 backdrop-filter: blur(16px);
-  border:1px solid var(--line);
+  border:1px solid rgba(255,255,255,0.16);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
 }
@@ -66,16 +66,16 @@ backdrop-filter: blur(16px);
     .card{padding:22px}
     .title{font-size:22px;font-weight:800;margin:0 0 14px}
     label{display:block;font-weight:700;margin:10px 0 8px}
-    input,textarea{
-      width:100%;
-      padding:14px 16px;
-      border-radius:16px;
-      border:1px solid #d9cbbb;
-      background:#fff;
-      color:var(--text);
-      font-size:16px;
-      outline:none;
-    }
+   input,textarea{
+  width:100%;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.92);
+  color:#2f241d;
+  font-size:16px;
+  outline:none;
+}
     input:focus,textarea:focus{
       border-color:var(--accent);
       box-shadow:0 0 0 3px rgba(140,106,67,.12);
@@ -98,9 +98,14 @@ backdrop-filter: blur(16px);
   line-height:1.8;
   margin-top:10px;
 }
-    .status{margin-top:12px;font-size:14px;font-weight:700}
-    .ok{color:var(--ok)}
-    .err{color:var(--err)}
+   .status{
+  margin-top:12px;
+  font-size:14px;
+  font-weight:700;
+  color: rgba(255,255,255,0.78);
+}
+.ok{color:#7ee2a7}
+.err{color:#ff9b8f}
     .quad{
       display:grid;
       grid-template-columns:1fr 1fr;
