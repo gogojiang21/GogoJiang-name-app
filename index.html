@@ -29,17 +29,21 @@
   color:var(--text);
 }
     .wrap{max-width:1180px;margin:0 auto}
-   .hero,.card{
-  background: rgba(255,255,255,0.78);
-  border:1px solid rgba(255,255,255,0.35);
+  .hero{
+  background: rgba(255,255,255,0.85);
+  border:1px solid var(--line);
   border-radius:var(--radius);
   box-shadow:var(--shadow);
-  backdrop-filter: blur(12px);
 }
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
+
+.card{
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+     
     .hero{padding:26px 28px;margin-bottom:18px}
     h1{margin:0 0 10px;font-size:34px}
     .sub{color:var(--muted);line-height:1.9;margin:0}
