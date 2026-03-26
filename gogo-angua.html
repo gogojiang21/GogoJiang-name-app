@@ -445,13 +445,18 @@ function getMain(bottom, top){
 function isLucky(bottom, gua){
   return luckyPairs.has(`${bottom}+${gua}`);
 }
-function getHeGua(topNum,bottomNum){
-  if ((topNum===1 || topNum===2) && (bottomNum===5 || bottomNum===6)) return "合卦";
-  if ((topNum===7 || topNum===8) && (bottomNum===1 || bottomNum===2)) return "合卦";
-  if ((topNum===3 || topNum===4) && (bottomNum===7 || bottomNum===8)) return "合卦";
-  if ((topNum===9 || topNum===0) && (bottomNum===3 || bottomNum===4)) return "合卦";
-  if ((topNum===5 || topNum===6) && (bottomNum===9 || bottomNum===0)) return "合卦";
-  return "否";
+function getHeGua(topNum, bottomNum){
+  const pair = `${topNum},${bottomNum}`;
+
+  const validPairs = new Set([
+    "1,6",
+    "2,7",
+    "3,8",
+    "4,9",
+    "5,0"
+  ]);
+
+  return validPairs.has(pair) ? "合卦" : "否";
 }
 function getChong(topNum,bottomNum,gua){
   const strong = ["強官","弱官"];
