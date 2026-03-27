@@ -611,15 +611,7 @@ function getChange(yuan, nums){
 function runCalc(){
   const code = document.getElementById("userName").value.trim();
 
-  if(!code){
-    alert("請輸入優惠碼");
-    return;
-  }
-
-  if(!isVIP(code)){
-    alert("優惠碼錯誤");
-    return;
-  }
+ const isVipUser = isVIP(code);
 
   const date = getNum("date");
   const nums = [getNum("a1"),getNum("a2"),getNum("a3"),getNum("b1"),getNum("b2"),getNum("b3")];
@@ -655,8 +647,13 @@ function runCalc(){
   document.getElementById("rLucky").innerHTML =
     lucky ? '<span class="good">吉祥卦成立</span>' : '<span class="bad">否</span>';
 
+  if(isVipUser){
   document.getElementById("rMain").textContent =
     main ? `${main[0]}：${main[1]}` : "查無對應口訣";
+}else{
+  document.getElementById("rMain").textContent =
+    "🔒 輸入優惠碼解鎖完整口訣";
+}
 
   document.getElementById("rHouse").textContent = `${bottom}：${house}`;
   document.getElementById("rBody").textContent = `${bottom}：${body}`;
