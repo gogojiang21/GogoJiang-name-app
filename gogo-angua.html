@@ -647,20 +647,38 @@ function runCalc(){
   document.getElementById("rLucky").innerHTML =
     lucky ? '<span class="good">吉祥卦成立</span>' : '<span class="bad">否</span>';
 
-  if(isVipUser){
+if(isVipUser){
   document.getElementById("rMain").textContent =
     main ? `${main[0]}：${main[1]}` : "查無對應口訣";
 }else{
-  document.getElementById("rMain").textContent =
-    "🔒 輸入優惠碼解鎖完整口訣";
+  document.getElementById("rMain").textContent = "🔒 解鎖完整分析";
 }
 
+  if(isVipUser){
   document.getElementById("rHouse").textContent = `${bottom}：${house}`;
+}else{
+  document.getElementById("rHouse").textContent = "🔒 解鎖";
+}
+ if(isVipUser){
   document.getElementById("rBody").textContent = `${bottom}：${body}`;
+}else{
+  document.getElementById("rBody").textContent = "🔒 解鎖";
+}
+if(isVipUser){
   document.getElementById("rHe").textContent = he;
+}else{
+  document.getElementById("rHe").textContent = "🔒 解鎖";
+}
+  if(isVipUser){
   document.getElementById("rChong").textContent = chong;
+}else{
+  document.getElementById("rChong").textContent = "🔒 解鎖";
+}
+  if(isVipUser){
   document.getElementById("rChange").textContent = change;
-
+}else{
+  document.getElementById("rChange").textContent = "🔒 解鎖";
+}
   document.getElementById("detailMain").textContent = main
     ? `下卦 ${bottom} + 上卦 ${top} → ${main[0]}：${main[1]}`
     : "目前查不到對應主口訣。";
