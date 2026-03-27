@@ -644,9 +644,12 @@ function runCalc(){
   document.getElementById("rTop").textContent = top;
   document.getElementById("rBottom").textContent = bottom;
   document.getElementById("rGua").textContent = gua;
+  if(isVipUser){
   document.getElementById("rLucky").innerHTML =
     lucky ? '<span class="good">吉祥卦成立</span>' : '<span class="bad">否</span>';
-
+}else{
+  document.getElementById("rLucky").textContent = "🔒 解鎖";
+}
 if(isVipUser){
   document.getElementById("rMain").textContent =
     main ? `${main[0]}：${main[1]}` : "查無對應口訣";
@@ -679,12 +682,18 @@ if(isVipUser){
 }else{
   document.getElementById("rChange").textContent = "🔒 解鎖";
 }
+  if(isVipUser){
   document.getElementById("detailMain").textContent = main
     ? `下卦 ${bottom} + 上卦 ${top} → ${main[0]}：${main[1]}`
     : "目前查不到對應主口訣。";
+}else{
+  document.getElementById("detailMain").textContent =
+    `下卦 ${bottom} + 上卦 ${top} → 🔒 解鎖完整分析`;
+}
 
   document.getElementById("detailRelation").textContent = "";
 
+  if(isVipUser){
   document.getElementById("detailExtra").textContent =
 `陽宅口訣：${house}
 身體卦口訣：${body}
@@ -692,6 +701,15 @@ if(isVipUser){
 合卦：${he}
 沖卦：${chong}
 變動爻：${change}`;
+}else{
+  document.getElementById("detailExtra").textContent =
+`陽宅口訣：🔒
+身體卦口訣：🔒
+吉祥卦：🔒
+合卦：🔒
+沖卦：🔒
+變動爻：🔒`;
+}
 
   document.getElementById("notes").textContent = "";
 }
