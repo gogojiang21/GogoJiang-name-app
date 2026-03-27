@@ -460,26 +460,29 @@ function getChong(topNum,bottomNum,gua){
   const strong = ["強官","弱官"];
   const money = ["正財","暗財"];
 
-  if (topNum===8 && bottomNum===1){
+  const check = (a,b) => (topNum===a && bottomNum===b) || (topNum===b && bottomNum===a);
+
+  if (check(8,1)){
     if (strong.includes(gua)) return "遭非議";
     if (money.includes(gua)) return "遭奪取";
   }
-  if (topNum===2 && bottomNum===5){
+  if (check(2,5)){
     if (strong.includes(gua)) return "有阻礙";
     if (money.includes(gua)) return "有困擾";
   }
-  if (topNum===6 && bottomNum===9){
+  if (check(6,9)){
     if (strong.includes(gua)) return "事遲緩";
     if (money.includes(gua)) return "自投網";
   }
-  if (topNum===0 && bottomNum===3){
+  if (check(0,3)){
     if (strong.includes(gua)) return "破傷亡";
     if (money.includes(gua)) return "暗刑喪";
   }
-  if (topNum===4 && bottomNum===7){
+  if (check(4,7)){
     if (strong.includes(gua)) return "多變化";
     if (money.includes(gua)) return "腳亂踏";
   }
+
   return "否";
 }
 function getChange(yuan, nums){
