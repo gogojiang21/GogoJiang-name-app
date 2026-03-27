@@ -276,7 +276,8 @@ button:hover{
       <h2>輸入資料</h2>
       <label>當天日期</label>
       <input id="date" type="number" min="1" max="31">
-
+<label>優惠碼</label>
+<input id="userName" placeholder="輸入優惠碼">
       <label>第一排（三個數字，由左到右）</label>
       <div class="row3">
         <input id="a1" type="number" min="0" max="9">
@@ -338,6 +339,14 @@ button:hover{
 </div>
 
 <script>
+  const VIP_CODES = [
+  "Kayla",
+  "GOGO888",
+  "八部家旦"
+];
+  function isVIP(code){
+  return VIP_CODES.includes(code);
+}
 const MAIN = {
   "胎,名":["太極卦","四象氣集太極宮，亂搶亂得一場空"],
   "胎,財":["套牢卦","落葉時節求此卦，進得籠中出得難"],
@@ -599,8 +608,19 @@ function getChong(topNum,bottomNum,gua){
 function getChange(yuan, nums){
   return nums.includes(yuan) ? (CHANGE[yuan] || "有變動") : "無";
 }
-
 function runCalc(){
+  const code = document.getElementById("userName").value.trim();
+
+  if(!code){
+    alert("請輸入優惠碼");
+    return;
+  }
+
+  if(!isVIP(code)){
+    alert("優惠碼錯誤");
+    return;
+  }
+
   const date = getNum("date");
   const nums = [getNum("a1"),getNum("a2"),getNum("a3"),getNum("b1"),getNum("b2"),getNum("b3")];
 
@@ -608,6 +628,7 @@ function runCalc(){
     alert("日期請輸入 1 到 31。");
     return;
   }
+
   if (!nums.every(n => Number.isInteger(n) && n >= 0 && n <= 9)){
     alert("六個數字都要是 0 到 9。");
     return;
@@ -631,30 +652,26 @@ function runCalc(){
   document.getElementById("rTop").textContent = top;
   document.getElementById("rBottom").textContent = bottom;
   document.getElementById("rGua").textContent = gua;
-  document.getElementById("rLucky").innerHTML = lucky ? '<span class="good">吉祥卦成立</span>' : '<span class="bad">否</span>';
-  document.getElementById("rMain").textContent = main ? `${main[0]}：${main[1]}` : "查無對應口訣";
+  document.getElementById("rLucky").innerHTML =
+    lucky ? '<span class="good">吉祥卦成立</span>' : '<span class="bad">否</span>';
+
+  document.getElementById("rMain").textContent =
+    main ? `${main[0]}：${main[1]}` : "查無對應口訣";
+
   document.getElementById("rHouse").textContent = `${bottom}：${house}`;
   document.getElementById("rBody").textContent = `${bottom}：${body}`;
   document.getElementById("rHe").textContent = he;
   document.getElementById("rChong").textContent = chong;
   document.getElementById("rChange").textContent = change;
 
-  const topEl = getElement(getNum("a3"));
-  const bottomEl = getElement(getNum("b3"));
-  let relation = "無";
-  if (isGenerate(topEl,bottomEl)) relation = "上排生下排";
-  else if (isGenerate(bottomEl,topEl)) relation = "下排生上排";
-  else if (topEl === bottomEl) relation = "同五行";
-  else if (isControl(topEl,bottomEl)) relation = "上排剋下排";
-  else if (isControl(bottomEl,topEl)) relation = "下排剋上排";
-
   document.getElementById("detailMain").textContent = main
     ? `下卦 ${bottom} + 上卦 ${top} → ${main[0]}：${main[1]}`
     : "目前查不到對應主口訣。";
 
   document.getElementById("detailRelation").textContent = "";
+
   document.getElementById("detailExtra").textContent =
-    `陽宅口訣：${house}
+`陽宅口訣：${house}
 身體卦口訣：${body}
 吉祥卦：${lucky ? "是" : "否"}
 合卦：${he}
