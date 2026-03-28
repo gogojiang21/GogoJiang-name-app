@@ -253,6 +253,57 @@ button:hover{
   .result-grid{grid-template-columns:1fr}
   h1{font-size:28px}
 }
+  .inner-yao-table{
+  margin-top:10px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:18px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  color:#fff;
+  font-size:16px;
+  line-height:1.9;
+}
+
+.yao-grid{
+  display:grid;
+  grid-template-columns: 180px 60px 60px 60px 50px 50px;
+  gap:6px 10px;
+  align-items:center;
+}
+
+.yao-head{
+  font-weight:800;
+  color:rgba(255,255,255,0.88);
+  padding-bottom:8px;
+  border-bottom:1px dashed rgba(255,255,255,0.28);
+  margin-bottom:10px;
+}
+
+.yao-divider{
+  grid-column:1/-1;
+  border-top:1px dashed rgba(255,255,255,0.25);
+  margin:10px 0;
+}
+
+.yao-arrow-row{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns: 180px 60px 60px 60px 50px 50px;
+  align-items:center;
+  min-height:22px;
+}
+
+.yao-arrow{
+  grid-column:3;
+  text-align:center;
+  font-weight:900;
+  color:rgba(255,255,255,0.85);
+}
+
+.arrow-gen{ color:#7ee2a7; }
+.arrow-same{ color:rgba(255,255,255,0.7); }
+.arrow-ctrl{ color:#ff9b8f; }
 </style>
 </head>
 <body>
@@ -359,11 +410,18 @@ button:hover{
         <div class="result"><div class="k">沖卦</div><div id="rChong" class="v small">—</div></div>
         <div class="result"><div class="k">變動爻</div><div id="rChange" class="v small">—</div></div>
 
-        <div class="result full"><div class="k">安卦（待補）</div><div class="v small placeholder">爻象、卦數、五行、六神：等待你補規則</div></div>
-        <div class="result full"><div class="k">變動爻細項（待補）</div><div class="v small placeholder">爻象、卦數、五行：等待你補規則</div></div>
-      </div>
+        <div class="result full">
+  <div class="k">內爻分析</div>
+  <div id="innerYaoTable" class="inner-yao-table">請先輸入資料，再按下「開始安卦」。</div>
+</div>
 
-      <table class="table" style="display:none;">
+<div class="result full">
+  <div class="k">變動爻細項</div>
+  <div id="changeDetail" class="inner-yao-table">—</div>
+</div>
+</div>
+
+<table class="table" style="display:none;">
         <tr><th>主卦說明</th><td id="detailMain">—</td></tr>
         <tr><th>關係判定</th><td id="detailRelation">—</td></tr>
         <tr><th>補充判斷</th><td id="detailExtra">—</td></tr>
@@ -645,6 +703,187 @@ function getChong(topNum,bottomNum,gua){
 function getChange(yuan, nums){
   return nums.includes(yuan) ? (CHANGE[yuan] || "有變動") : "無";
 }
+  function getYaoPoint(num, ri){
+  const order = ["名","財","官","利","交","敗","衰","煞","絕"];
+
+  if(num === 0){
+    const zeroMap = {
+      0:"名",
+      1:"財",
+      2:"官",
+      3:"利",
+      4:"交",
+      5:"敗",
+      6:"衰",
+      7:"煞",
+      8:"絕"
+    };
+    return zeroMap[ri] || "—";
+  }
+
+  let current = num;
+  const map = {};
+
+  for(let i = 0; i < 9; i++){
+    map[current] = order[i];
+    current++;
+    if(current > 9) current = 1;
+  }
+
+  return map[ri] || "—";
+}
+
+function getLineElement(num){
+  if([1,2].includes(num)) return "木";
+  if([3,4].includes(num)) return "火";
+  if([5,6].includes(num)) return "土";
+  if([7,8].includes(num)) return "金";
+  if([9,0].includes(num)) return "水";
+  return "—";
+}
+
+function getSixGodList(yuan){
+  const gods = ["喜","禍","懶","亂","病","災"];
+  const startIndex = (yuan - 1) % 6;
+  const result = [];
+
+  for(let i = 0; i < 6; i++){
+    result.push(gods[(startIndex + i) % 6]);
+  }
+
+  return result;
+}
+
+function getGodRule(god, element){
+  const rules = {
+    "木": {
+      "喜":"在木吉星降",
+      "禍":"追木傷口腔",
+      "懶":"見木有困難",
+      "亂":"見木稍有緩",
+      "病":"撞木有刀傷",
+      "災":"入木多災難"
+    },
+    "火": {
+      "喜":"入火喜臨門",
+      "禍":"在火口舌多",
+      "懶":"追火財失半",
+      "亂":"追火自我煩",
+      "病":"見火空煩惱",
+      "災":"撞火藏血光"
+    },
+    "土": {
+      "喜":"撞土外來貴",
+      "禍":"入土官非訟",
+      "懶":"在土得田產",
+      "亂":"在土急又慌",
+      "病":"追土求醫難",
+      "災":"見土哭情傷"
+    },
+    "金": {
+      "喜":"見金曇花現",
+      "禍":"撞金財洗災",
+      "懶":"入金暗財豐",
+      "亂":"入金恐有傷",
+      "病":"在金病來纏",
+      "災":"追金自求貪"
+    },
+    "水": {
+      "喜":"追水福自求",
+      "禍":"見水禍解脫",
+      "懶":"撞水小憂傷",
+      "亂":"撞水驚嚇夢",
+      "病":"入水神經亂",
+      "災":"在水盜鬼昌"
+    }
+  };
+
+  return rules[element]?.[god] || "—";
+}
+
+function getRelationArrow(current, next){
+  if(!next) return { symbol:"", cls:"" };
+
+  const generate = {
+    "木":"火",
+    "火":"土",
+    "土":"金",
+    "金":"水",
+    "水":"木"
+  };
+
+  const control = {
+    "木":"土",
+    "土":"水",
+    "水":"火",
+    "火":"金",
+    "金":"木"
+  };
+
+  if(current === next){
+    return { symbol:"‖", cls:"arrow-same" };
+  }
+
+  if(generate[current] === next){
+    return { symbol:"↓", cls:"arrow-gen" };
+  }
+
+  if(control[current] === next){
+    return { symbol:"▼", cls:"arrow-ctrl" };
+  }
+
+  return { symbol:"", cls:"" };
+}
+
+function buildInnerYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
+  const nums = [a3, a2, a1, b3, b2, b1];
+  const points = nums.map(n => getYaoPoint(n, ri));
+  const elements = nums.map(n => getLineElement(n));
+  const gods = getSixGodList(yuan);
+  const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
+
+  let html = `
+    <div class="yao-grid">
+      <div class="yao-head">六神口訣</div>
+      <div class="yao-head">六神</div>
+      <div class="yao-head">方向</div>
+      <div class="yao-head">五行</div>
+      <div class="yao-head">卦數</div>
+      <div class="yao-head">爻象</div>
+  `;
+
+  for(let i = 0; i < 6; i++){
+    html += `
+      <div>${godRules[i]}</div>
+      <div>${gods[i]}</div>
+      <div></div>
+      <div>${elements[i]}</div>
+      <div>${nums[i]}</div>
+      <div>${points[i]}</div>
+    `;
+
+    if(i !== 2 && i !== 5){
+      const arrow = getRelationArrow(elements[i], elements[i+1]);
+      html += `
+        <div class="yao-arrow-row">
+          <div></div>
+          <div></div>
+          <div class="yao-arrow ${arrow.cls}">${arrow.symbol}</div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      `;
+    }
+
+    if(i === 2){
+      html += `<div class="yao-divider"></div>`;
+    }
+  }
+
+  html += `</div>`;
+  return html;
+}
 function runCalc(){
   const code = document.getElementById("userName").value.trim();
 
@@ -747,8 +986,21 @@ if(isVipUser){
 沖卦：🔒
 變動爻：🔒`;
 }
+const innerHtml = buildInnerYaoHtml(
+  ri, yuan,
+  getNum("a1"), getNum("a2"), getNum("a3"),
+  getNum("b1"), getNum("b2"), getNum("b3")
+);
 
+if(isVipUser){
+  document.getElementById("innerYaoTable").innerHTML = innerHtml;
+  document.getElementById("changeDetail").textContent = change;
+}else{
+  document.getElementById("innerYaoTable").textContent = "🔒 解鎖完整內爻分析";
+  document.getElementById("changeDetail").textContent = "🔒 解鎖";
+}
   document.getElementById("notes").textContent = "";
+  
 }
 
 function fillExample(){
@@ -774,6 +1026,8 @@ function clearForm(){
   document.getElementById("detailRelation").textContent = "—";
   document.getElementById("detailExtra").textContent = "—";
   document.getElementById("notes").textContent = "";
+  document.getElementById("innerYaoTable").textContent = "請先輸入資料，再按下「開始安卦」。";
+  document.getElementById("changeDetail").textContent = "—";
 }
 
 // fillExample();
