@@ -822,8 +822,16 @@ function getRelationArrow(current, next){
     return { symbol:"↓", cls:"arrow-gen" };
   }
 
+  if(generate[next] === current){
+    return { symbol:"↑", cls:"arrow-gen" };
+  }
+
   if(control[current] === next){
     return { symbol:"▼", cls:"arrow-ctrl" };
+  }
+
+  if(control[next] === current){
+    return { symbol:"▲", cls:"arrow-ctrl" };
   }
 
   return { symbol:"", cls:"" };
