@@ -312,6 +312,10 @@ button:hover{
 .arrow-ctrl-up{ color:#ff4d6d; }    /* ▲ */
 
 .arrow-same{ color:rgba(255,255,255,0.7); } /* ‖ */
+  .changed-num{
+  color:#ff4d6d;
+  font-weight:900;
+}
 </style>
 </head>
 <body>
@@ -711,6 +715,13 @@ function getChong(topNum,bottomNum,gua){
 function getChange(yuan, nums){
   return nums.includes(yuan) ? (CHANGE[yuan] || "有變動") : "無";
 }
+  function getChangedNum(num, yuan){
+  if(num === yuan){
+    return digitalRoot(num + yuan);
+  }
+  return num;
+}
+ 
   function getYaoPoint(num, ri){
   const order = ["名","財","官","利","交","敗","衰","煞","絕"];
 
@@ -751,6 +762,11 @@ function getLineElement(num){
 }
 
 function getSixGodList(yuan){
+  function getSingleGod(num){
+  const gods = ["喜","禍","懶","亂","病","災"];
+  const index = (num - 1) % 6;
+  return gods[index];
+}
   const gods = ["喜","禍","懶","亂","病","災"];
   const startIndex = (yuan - 1) % 6;
   const result = [];
@@ -855,8 +871,8 @@ function buildInnerYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
   const nums = [a3, a2, a1, b3, b2, b1];
   const points = nums.map(n => getYaoPoint(n, ri));
   const elements = nums.map(n => getLineElement(n));
-  const gods = getSixGodList(yuan);
-  const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
+ const gods = nums.map(n => getSingleGod(n));
+const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
 
   let html = `
     <div class="yao-grid">
@@ -875,6 +891,62 @@ function buildInnerYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
       <div></div>
       <div>${elements[i]}</div>
       <div>${nums[i]}</div>
+      <div>${points[i]}</div>
+    `;
+
+    if(i !== 2 && i !== 5){
+      const arrow = getRelationArrow(elements[i], elements[i + 1]);
+
+      html += `
+        <div class="yao-arrow-row">
+          <div></div>
+          <div></div>
+          <div class="yao-arrow ${arrow.cls}">${arrow.symbol}</div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      `;
+    }
+
+    if(i === 2){
+      html += `<div class="yao-divider"></div>`;
+    }
+  }
+
+  html += `</div>`;
+  return html;
+}
+  function buildChangedYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
+
+  const originalNums = [a3, a2, a1, b3, b2, b1];
+  const nums = originalNums.map(n => getChangedNum(n, yuan));
+
+  const points = nums.map(n => getYaoPoint(n, ri));
+  const elements = nums.map(n => getLineElement(n));
+  const gods = getSixGodList(yuan);
+  const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
+
+  let html = `
+    <div class="yao-grid">
+      <div class="yao-head">六神口訣</div>
+      <div class="yao-head">六神</div>
+      <div class="yao-head">方向</div>
+      <div class="yao-head">五行</div>
+      <div class="yao-head">卦數</div>
+      <div class="yao-head">爻象</div>
+  `;
+
+  for(let i = 0; i < 6; i++){
+
+    const isChanged = originalNums[i] === yuan;
+
+    html += `
+      <div>${godRules[i]}</div>
+      <div>${gods[i]}</div>
+      <div></div>
+      <div>${elements[i]}</div>
+      <div class="${isChanged ? 'changed-num' : ''}">${nums[i]}</div>
       <div>${points[i]}</div>
     `;
 
@@ -1011,7 +1083,13 @@ const innerHtml = buildInnerYaoHtml(
 
 if(isVipUser){
   document.getElementById("innerYaoTable").innerHTML = innerHtml;
-  document.getElementById("changeDetail").textContent = change;
+  const changedHtml = buildChangedYaoHtml(
+  ri, yuan,
+  getNum("a1"), getNum("a2"), getNum("a3"),
+  getNum("b1"), getNum("b2"), getNum("b3")
+);
+
+document.getElementById("changeDetail").innerHTML = changedHtml;
 }else{
   document.getElementById("innerYaoTable").textContent = "🔒 解鎖完整內爻分析";
   document.getElementById("changeDetail").textContent = "🔒 解鎖";
