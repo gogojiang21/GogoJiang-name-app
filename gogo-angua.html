@@ -767,11 +767,12 @@ function getLineElement(num){
 
 function getSixGodList(yuan){
   const gods = ["喜","禍","懶","亂","病","災"];
-  const startIndex = (yuan - 1) % 6;
-  const result = [];
+  const result = new Array(6);
+
+  const yuanPos = (yuan - 1) % 6;
 
   for(let i = 0; i < 6; i++){
-    result.push(gods[(startIndex + i) % 6]);
+    result[i] = gods[(i - yuanPos + 6) % 6];
   }
 
   return result;
@@ -870,7 +871,7 @@ function buildInnerYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
   const nums = [a3, a2, a1, b3, b2, b1];
   const points = nums.map(n => getYaoPoint(n, ri));
   const elements = nums.map(n => getLineElement(n));
- const gods = nums.map(n => getSingleGod(n));
+const gods = getSixGodList(yuan);
 const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
 
   let html = `
@@ -889,7 +890,7 @@ const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
       <div>${gods[i]}</div>
       <div></div>
       <div>${elements[i]}</div>
-      <div>${nums[i]}</div>
+      <div class="${nums[i] === yuan ? 'changed-num' : ''}">${nums[i]}</div>
       <div>${points[i]}</div>
     `;
 
@@ -919,12 +920,12 @@ const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
   function buildChangedYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
 
   const originalNums = [a3, a2, a1, b3, b2, b1];
-  const nums = originalNums.map(n => getChangedNum(n, yuan));
+const nums = originalNums.map(n => getChangedNum(n, yuan));
 
-  const points = nums.map(n => getYaoPoint(n, ri));
-  const elements = nums.map(n => getLineElement(n));
-  const gods = nums.map(n => getSingleGod(n));
-  const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
+const points = nums.map(n => getYaoPoint(n, ri));
+const elements = nums.map(n => getLineElement(n));
+const gods = getSixGodList(yuan);
+const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
 
   let html = `
     <div class="yao-grid">
