@@ -999,8 +999,17 @@ if(isVipUser){
   document.getElementById("innerYaoTable").textContent = "🔒 解鎖完整內爻分析";
   document.getElementById("changeDetail").textContent = "🔒 解鎖";
 }
-  document.getElementById("notes").textContent = "";
-  
+ document.getElementById("notes").textContent = isVipUser
+? `【推演過程】
+日辰：${ri}
+元神：${yuan}
+上卦：${top}
+下卦：${bottom}
+卦象：${gua}
+合卦：${he}
+沖卦：${chong}
+變動爻：${change}`
+: "🔒 解鎖完整推演過程"; 
 }
 
 function fillExample(){
