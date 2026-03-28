@@ -427,7 +427,7 @@ button:hover{
         <tr><th>補充判斷</th><td id="detailExtra">—</td></tr>
       </table>
 
-      <div id="notes" class="box-note">按下「開始安卦」後，這裡會顯示完整推演過程。</div>
+    
     </section>
   </div>
 </div>
@@ -999,17 +999,7 @@ if(isVipUser){
   document.getElementById("innerYaoTable").textContent = "🔒 解鎖完整內爻分析";
   document.getElementById("changeDetail").textContent = "🔒 解鎖";
 }
- document.getElementById("notes").textContent = isVipUser
-? `【推演過程】
-日辰：${ri}
-元神：${yuan}
-上卦：${top}
-下卦：${bottom}
-卦象：${gua}
-合卦：${he}
-沖卦：${chong}
-變動爻：${change}`
-: "🔒 解鎖完整推演過程"; 
+
 }
 
 function fillExample(){
@@ -1034,7 +1024,6 @@ function clearForm(){
   document.getElementById("detailMain").textContent = "—";
   document.getElementById("detailRelation").textContent = "—";
   document.getElementById("detailExtra").textContent = "—";
-  document.getElementById("notes").textContent = "";
   document.getElementById("innerYaoTable").textContent = "請先輸入資料，再按下「開始安卦」。";
   document.getElementById("changeDetail").textContent = "—";
 }
