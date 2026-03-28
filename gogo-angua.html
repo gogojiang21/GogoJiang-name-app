@@ -286,7 +286,13 @@ button:hover{
   margin:10px 0;
 }
 
-
+.yao-arrow-row{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:180px 60px 60px 60px 50px 50px;
+  align-items:center;
+  min-height:28px;
+}
 
 .yao-arrow{
   text-align:center;
@@ -863,25 +869,29 @@ function buildInnerYaoHtml(ri, yuan, a1, a2, a3, b1, b2, b3){
   `;
 
   for(let i = 0; i < 6; i++){
-    let direction = "";
-    let directionClass = "";
-
-    if(i === 0 || i === 3){
-      direction = "";
-    } else {
-      const arrow = getRelationArrow(elements[i - 1], elements[i]);
-      direction = arrow.symbol;
-      directionClass = arrow.cls;
-    }
-
     html += `
       <div>${godRules[i]}</div>
       <div>${gods[i]}</div>
-      <div class="yao-arrow ${directionClass}">${direction}</div>
+      <div></div>
       <div>${elements[i]}</div>
       <div>${nums[i]}</div>
       <div>${points[i]}</div>
     `;
+
+    if(i !== 2 && i !== 5){
+      const arrow = getRelationArrow(elements[i], elements[i + 1]);
+
+      html += `
+        <div class="yao-arrow-row">
+          <div></div>
+          <div></div>
+          <div class="yao-arrow ${arrow.cls}">${arrow.symbol}</div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      `;
+    }
 
     if(i === 2){
       html += `<div class="yao-divider"></div>`;
