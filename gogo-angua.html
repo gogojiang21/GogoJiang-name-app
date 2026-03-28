@@ -427,7 +427,7 @@ button:hover{
   <div id="innerYaoTable" class="inner-yao-table">請先輸入資料，再按下「開始安卦」。</div>
 </div>
 
-<div class="result full">
+<div class="result full" id="changeDetailBlock">
   <div class="k">變動爻細項</div>
   <div id="changeDetail" class="inner-yao-table">—</div>
 </div>
@@ -1083,16 +1083,26 @@ const innerHtml = buildInnerYaoHtml(
 
 if(isVipUser){
   document.getElementById("innerYaoTable").innerHTML = innerHtml;
-  const changedHtml = buildChangedYaoHtml(
-  ri, yuan,
-  getNum("a1"), getNum("a2"), getNum("a3"),
-  getNum("b1"), getNum("b2"), getNum("b3")
-);
 
-document.getElementById("changeDetail").innerHTML = changedHtml;
+  const changeBlock = document.getElementById("changeDetailBlock");
+
+  if(change === "無"){
+    changeBlock.style.display = "none";
+    document.getElementById("changeDetail").innerHTML = "—";
+  }else{
+    changeBlock.style.display = "";
+    const changedHtml = buildChangedYaoHtml(
+      ri, yuan,
+      getNum("a1"), getNum("a2"), getNum("a3"),
+      getNum("b1"), getNum("b2"), getNum("b3")
+    );
+    document.getElementById("changeDetail").innerHTML = changedHtml;
+  }
+
 }else{
   document.getElementById("innerYaoTable").textContent = "🔒 解鎖完整內爻分析";
   document.getElementById("changeDetail").textContent = "🔒 解鎖";
+  document.getElementById("changeDetailBlock").style.display = "";
 }
 
 }
@@ -1121,6 +1131,7 @@ function clearForm(){
   document.getElementById("detailExtra").textContent = "—";
   document.getElementById("innerYaoTable").textContent = "請先輸入資料，再按下「開始安卦」。";
   document.getElementById("changeDetail").textContent = "—";
+  document.getElementById("changeDetailBlock").style.display = "";
 }
 
 // fillExample();
