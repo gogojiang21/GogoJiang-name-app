@@ -434,7 +434,7 @@ button:hover{
 ];
 
 function isVIP(code){
-  return VIP_CODES.includes(code.toLowerCase());
+  return VIP_CODES.includes((code || "").toLowerCase());
 }
 const MAIN = {
   "胎,名":["太極卦","四象氣集太極宮，亂搶亂得一場空"],
