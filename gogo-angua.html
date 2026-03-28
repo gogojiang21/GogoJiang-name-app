@@ -291,13 +291,21 @@ button:hover{
 .yao-arrow{
   text-align:center;
   font-weight:900;
-  font-size:22px;
+  font-size:26px;
   line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:"Arial Black","PingFang TC",sans-serif;
 }
 
-.arrow-gen{ color:#7ee2a7; }
-.arrow-same{ color:rgba(255,255,255,0.7); }
-.arrow-ctrl{ color:#ff9b8f; }
+.arrow-gen-down{ color:#7ee2a7; }   /* ↓ */
+.arrow-gen-up{ color:#00e0ff; }     /* ↑ */
+
+.arrow-ctrl-down{ color:#ff9b8f; }  /* ▼ */
+.arrow-ctrl-up{ color:#ff4d6d; }    /* ▲ */
+
+.arrow-same{ color:rgba(255,255,255,0.7); } /* ‖ */
 </style>
 </head>
 <body>
@@ -818,21 +826,21 @@ function getRelationArrow(current, next){
     return { symbol:"‖", cls:"arrow-same" };
   }
 
-  if(generate[current] === next){
-    return { symbol:"↓", cls:"arrow-gen" };
-  }
+if(generate[current] === next){
+  return { symbol:"↓", cls:"arrow-gen-down" };
+}
 
-  if(generate[next] === current){
-    return { symbol:"↑", cls:"arrow-gen" };
-  }
+if(generate[next] === current){
+  return { symbol:"↑", cls:"arrow-gen-up" };
+}
 
-  if(control[current] === next){
-    return { symbol:"▼", cls:"arrow-ctrl" };
-  }
+if(control[current] === next){
+  return { symbol:"▼", cls:"arrow-ctrl-down" };
+}
 
-  if(control[next] === current){
-    return { symbol:"▲", cls:"arrow-ctrl" };
-  }
+if(control[next] === current){
+  return { symbol:"▲", cls:"arrow-ctrl-up" };
+}
 
   return { symbol:"", cls:"" };
 }
