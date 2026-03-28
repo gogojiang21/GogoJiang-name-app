@@ -751,7 +751,11 @@ function getChange(yuan, nums){
 
   return map[ri] || "—";
 }
-
+function getSingleGod(num){
+  const gods = ["喜","禍","懶","亂","病","災"];
+  const index = ((num || 0) + 5) % 6;
+  return gods[index];
+}
 function getLineElement(num){
   if([1,2].includes(num)) return "木";
   if([3,4].includes(num)) return "火";
@@ -762,11 +766,6 @@ function getLineElement(num){
 }
 
 function getSixGodList(yuan){
-  function getSingleGod(num){
-  const gods = ["喜","禍","懶","亂","病","災"];
-  const index = (num - 1) % 6;
-  return gods[index];
-}
   const gods = ["喜","禍","懶","亂","病","災"];
   const startIndex = (yuan - 1) % 6;
   const result = [];
@@ -924,7 +923,7 @@ const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
 
   const points = nums.map(n => getYaoPoint(n, ri));
   const elements = nums.map(n => getLineElement(n));
-  const gods = getSixGodList(yuan);
+  const gods = nums.map(n => getSingleGod(n));
   const godRules = gods.map((g, i) => getGodRule(g, elements[i]));
 
   let html = `
