@@ -700,12 +700,17 @@ ${starName}
 人生啟示錄：${poem}
 特殊基因：${matchedGenes.length}條：`;
 
-  if (matchedGenes.length === 0) {
+ 特殊基因：${matchedGenes.length}條：`;
+
+if (matchedGenes.length === 0) {
   text += "\n成功基因0條";
 } else {
   matchedGenes.forEach(g => {
     text += `\n${g.name}\n${g.text}`;
   });
+}
+
+return text;
 }
 `命格分析：${fullName}
 命格排列：${P}/${D}/${C}/${L}
