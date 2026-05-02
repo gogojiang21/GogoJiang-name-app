@@ -645,7 +645,7 @@ const M1 = fullNameStrokeDict[given1];
 
   let M2 = null;
   if (!isSingleName) {
-    M2 = nameStrokeDict[given2];
+    M2 = fullNameStrokeDict[given2];
     if (typeof M2 !== "number") {
       throw new Error(`名字字庫缺字：${given2}`);
     }
