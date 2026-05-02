@@ -441,53 +441,58 @@ button:hover{
     };
 
     /* ========= 成功基因組合 ========= */
-    const geneRules = [
-      {
-        name:"特殊頻率",
-        keyA:"mindset", keyB:"team",
-        text:"你想要什麼就直接講，講了才會有人幫你。你越敢講，事情就越容易成。"
-      },
-      {
-        name:"特殊機運",
-        keyA:"creative", keyB:"goal",
-        text:"你先想好要幹嘛，機會就會慢慢出現。你敢去做你的想法，好事就會跟著來。"
-      },
-      {
-        name:"特殊格局",
-        keyA:"drive", keyB:"goal",
-        text:"你不是慢慢學的人，是一做就上手的人。環境越亂、變動越大，你反而越容易衝出來。"
-      },
-      {
-        name:"特殊權力",
-        keyA:"mindset", keyB:"drive",
-        text:"你心裡越想掌控，現實就越容易讓你有權力。你越敢爭、越敢上位，就越容易變成主導的人。"
-      },
-      {
-        name:"特殊魅力",
-        keyA:"creative", keyB:"team",
-        text:"你有想法敢講，就會有人被你吸過來幫你。你越敢秀自己，資源跟人就越會靠過來。"
-      },
-      {
-        name:"特殊音頻",
-        keyA:"creative", keyB:"mindset",
-        text:"你現在講的話，可能身邊的人聽不懂，但外面的人會懂。你敢一直講你的理念，最後會變成一個領頭的人。"
-      },
-      {
-        name:"特殊帶動",
-        keyA:"drive", keyB:"team",
-        text:"你不是自己做強，是帶一群人一起變強。你只要開始做，大家就會自動跟上你。"
-      },
-      {
-        name:"特殊感應",
-        keyA:"mindset", keyB:"goal",
-        text:"你常常會有感覺，而且通常都滿準的。你敢相信、敢講出來，就會有人開始認同你。"
-      },
-      {
-        name:"特殊運轉",
-        keyA:"creative", keyB:"drive",
-        text:"你想到的，不會停在腦袋，會開始動起來。你一開始做，後面就會自己慢慢運轉。"
-      }
-    ];
+const geneRules = [
+  {
+    name:"特殊頻率",
+    keyA:"mindset", keyB:"team",
+    text:"你想要什麼就直接講，講了才會有人幫你。你越敢講，事情就越容易成。"
+  },
+  {
+    name:"特殊機運",
+    keyA:"creative", keyB:"goal",
+    text:"你先想好要幹嘛，機會就會慢慢出現。你敢去做你的想法，好事就會跟著來。"
+  },
+  {
+    name:"特殊格局",
+    keyA:"drive", keyB:"goal",
+    text:"你不是慢慢學的人，是一做就上手的人。環境越亂、變動越大，你反而越容易衝出來。"
+  },
+  {
+    name:"特殊權力",
+    keyA:"mindset", keyB:"drive",
+    text:"你心裡越想掌控，現實就越容易讓你有權力。你越敢爭、越敢上位，就越容易變成主導的人。"
+  },
+  {
+    name:"特殊魅力",
+    keyA:"creative", keyB:"team",
+    text:"你有想法敢講，就會有人被你吸過來幫你。你越敢秀自己，資源跟人就越會靠過來。"
+  },
+  {
+    name:"特殊音頻",
+    keyA:"creative", keyB:"mindset",
+    text:"你現在講的話，可能身邊的人聽不懂，但外面的人會懂。你持續輸出會變成領頭者。"
+  },
+  {
+    name:"特殊帶動",
+    keyA:"drive", keyB:"team",
+    text:"你不是自己變強，是帶一群人一起變強。你一開始做，大家就會自動跟上你。"
+  },
+  {
+    name:"特殊感應",
+    keyA:"mindset", keyB:"goal",
+    text:"你常常會有直覺，而且通常都很準。你敢相信並表達，就會有人開始認同你。"
+  },
+  {
+    name:"特殊運轉",
+    keyA:"creative", keyB:"drive",
+    text:"你想到的，不會停在腦袋，一開始做就會自然運轉起來。"
+  },
+  {
+    name:"特殊場控",
+    keyA:"goal", keyB:"team",
+    text:"你在群體中容易成為焦點，並能帶動氣氛與他人的反應。適合需要表達、自我展現、影響他人或帶動群眾的角色。"
+  }
+];
 
    function normalizeDiff(a,b){
   let x = Math.abs(a - b);
