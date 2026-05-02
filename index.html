@@ -633,7 +633,13 @@ function analyzeName(fullName){
   }
 
   const S = surnameStrokeDict[surname];
-  const M1 = nameStrokeDict[given1];
+  const extraStrokeDict = JSON.parse(localStorage.getItem("extraStrokeDict") || "{}");
+const fullNameStrokeDict = {
+  ...nameStrokeDict,
+  ...extraStrokeDict
+};
+
+const M1 = fullNameStrokeDict[given1];
 
   if (typeof M1 !== "number") throw new Error(`名字字庫缺字：${given1}`);
 
