@@ -701,7 +701,12 @@ ${starName}
 特殊基因：${matchedGenes.length}條：`;
 
   if (matchedGenes.length === 0) {
-    text =
+  text += "\n成功基因0條";
+} else {
+  matchedGenes.forEach(g => {
+    text += `\n${g.name}\n${g.text}`;
+  });
+}
 `命格分析：${fullName}
 命格排列：${P}/${D}/${C}/${L}
 先天五行：${thoughtFn}
