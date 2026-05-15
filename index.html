@@ -279,6 +279,8 @@ button:hover{
         <div class="title">輸入資料</div>
         <label for="fullName">姓名</label>
         <input id="fullName" type="text" placeholder="例如： 黃仁勳 / 王小明" />
+        <label for="birthYear">出生年</label>
+        <input id="birthYear" type="number" placeholder="例如：1989" />
 
         <div class="btns">
           <button class="primary" id="analyzeBtn">開始分析</button>
@@ -636,13 +638,66 @@ function describeFiveElements(elements){
     throw new Error("請輸入：單姓雙名 或 單姓單名。");
   }
 }  //
+const luckStages = [
+  "冠帶",
+  "臨官",
+  "帝旺",
+  "衰",
+  "病",
+  "死",
+  "絕",
+  "胎",
+  "養",
+  "長生"
+];
 
+function getLiuNian(lifeNumber, birthYear){
+
+  const yearNow = new Date().getFullYear();
+
+  // 虛歲
+  const age = yearNow - birthYear + 1;
+
+  // 命宮尾數
+  let start = lifeNumber % 10;
+
+  if(start === 0){
+    start = 10;
+  }
+
+  // 建立流年循環
+  const sequence = [];
+
+  for(let i = 0; i < 10; i++){
+
+    let num = start + i;
+
+    if(num > 10){
+      num -= 10;
+    }
+
+    sequence.push({
+      num,
+      stage: luckStages[i]
+    });
+  }
+
+  // 歲數定位
+  const index = (age - 1) % 10;
+
+  return {
+    age,
+    current: sequence[index],
+    sequence
+  };
+}
 function analyzeName(fullName){
 
   if (!fullName.trim()) {
     throw new Error("請輸入姓名");
   }
-
+const birthYear =
+parseInt(document.getElementById("birthYear").value);
   const { surname, given1, given2, isSingleName } = parseName(fullName);
 
   if (typeof surnameStrokeDict[surname] !== "number") {
@@ -687,6 +742,9 @@ const M1 = fullNameStrokeDict[given1];
   const actionFn = relationOf(diseaseEl, childEl);
 
   const [starName, starMeaning] = lifeStarMap[L] || ["未知星","暫無對應"];
+
+  const liuNian =
+getLiuNian(L, birthYear);
   const poem = goalPoemMap.hasOwnProperty(goal) ? goalPoemMap[goal] : "此目標磁場暫無對應人生啟示錄。";
 
   const metrics = { creative, mindset, drive, team, goal };
@@ -701,6 +759,19 @@ const M1 = fullNameStrokeDict[given1];
 ${starName}
 象徵：${starMeaning}
 人生啟示錄：${poem}
+＝＝＝＝＝＝＝＝＝＝
+
+今年流年：${liuNian.age}歲
+流年數：${liuNian.current.num}
+流年階段：${liuNian.current.stage}
+
+流年排列：
+${liuNian.sequence.map(
+x => `${x.num}${x.stage}`
+).join("、")}
+
+＝＝＝＝＝＝＝＝＝＝
+
 特殊基因：${matchedGenes.length}條：`;
 
 
