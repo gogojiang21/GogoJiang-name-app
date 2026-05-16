@@ -280,7 +280,7 @@ button:hover{
         <label for="fullName">姓名</label>
         <input id="fullName" type="text" placeholder="例如： 黃仁勳 / 王小明" />
         <label for="birthYear">出生年</label>
-        <select id="birthYear" style="
+       <select id="birthYear" style="
 width:100%;
 padding:14px 16px;
 border-radius:16px;
@@ -296,7 +296,9 @@ box-shadow:0 8px 20px rgba(0,0,0,0.2);
 <option value="" style="color:black;">請選擇出生年</option>
 
 <script>
-for(let y = 2026; y >= 1940; y--){
+const currentYear = new Date().getFullYear();
+
+for(let y = currentYear; y >= 1940; y--){
   document.write(
     `<option value="${y}" style="color:black;">${y}</option>`
   );
