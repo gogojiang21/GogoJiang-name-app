@@ -837,26 +837,37 @@ function getLiuNian(lifeNumber, birthYear){
   const age = yearNow - birthYear + 1;
 
   const stages = [
-    "胎",
-    "養",
-    "長生",
     "冠帶",
     "臨官",
     "帝旺",
     "衰",
     "病",
     "死",
-    "絕"
+    "絕",
+    "胎",
+    "養",
+    "長生"
   ];
 
-  const raw = (lifeNumber + age - 1) % 10;
+  // 命宮尾數，0 當 10
+  let lifeTail = lifeNumber % 10;
+  if(lifeTail === 0) lifeTail = 10;
 
-  const index = raw === 0 ? 9 : raw - 1;
+  // 歲數尾數，0 當 10
+  let ageTail = age % 10;
+  if(ageTail === 0) ageTail = 10;
+
+  // 從命宮尾數起算，推到歲數尾數
+  let distance = ageTail - lifeTail;
+  if(distance < 0) distance += 10;
+
+  const stage = stages[distance];
 
   return {
     age,
     current: {
-      stage: stages[index]
+      num: ageTail,
+      stage
     }
   };
 }
