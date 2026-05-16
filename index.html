@@ -281,6 +281,20 @@ button:hover{
         <input id="fullName" type="text" placeholder="例如： 黃仁勳 / 王小明" />
         <label for="birthYear">出生年</label>
         <input id="birthYear" type="number" placeholder="例如：1989" />
+        <label for="countrySelect">國家機會點</label>
+
+<select id="countrySelect">
+  <option value="台灣">台灣</option>
+  <option value="美國">美國</option>
+  <option value="中國">中國</option>
+  <option value="泰國">泰國</option>
+  <option value="越南">越南</option>
+  <option value="香港">香港</option>
+  <option value="馬來西亞">馬來西亞</option>
+  <option value="印尼">印尼</option>
+  <option value="新加坡">新加坡</option>
+  <option value="加拿大">加拿大</option>
+</select>
 
         <div class="btns">
           <button class="primary" id="analyzeBtn">開始分析</button>
@@ -638,6 +652,39 @@ function describeFiveElements(elements){
     throw new Error("請輸入：單姓雙名 或 單姓單名。");
   }
 }  //
+    /* ========= 國家年份 ========= */
+
+const countryYears = {
+  "台灣":1912,
+  "美國":1789,
+  "中國":1949,
+  "泰國":1949,
+  "越南":1945,
+  "香港":1997,
+  "馬來西亞":1963,
+  "印尼":1950,
+  "新加坡":1965,
+  "加拿大":1982
+};
+
+/* ========= 機會點 ========= */
+
+const chanceMap = [
+  "名","財","官","利","交","敗","衰","煞","絕"
+];
+
+function reduceToDigit(num){
+
+  while(num > 9){
+
+    num = num
+      .toString()
+      .split("")
+      .reduce((a,b)=>a + Number(b),0);
+  }
+
+  return num;
+}
 const luckStages = [
   "冠帶",
   "臨官",
@@ -745,6 +792,42 @@ const M1 = fullNameStrokeDict[given1];
 
   const liuNian =
 getLiuNian(L, birthYear);
+  const country =
+document.getElementById("countrySelect").value;
+
+const baseYear =
+countryYears[country];
+
+const countryYear =
+new Date().getFullYear() - baseYear + 1;
+
+const countryDigit =
+reduceToDigit(countryYear);
+
+const lifeDigit =
+reduceToDigit(L);
+
+const cycle = [];
+
+for(let i = 0; i < 9; i++){
+
+  let val = lifeDigit + i;
+
+  if(val > 9){
+    val -= 9;
+  }
+
+  cycle.push(val);
+}
+
+const chancePoint =
+chanceMap[
+  cycle.indexOf(countryDigit)
+];
+
+const poem = goalPoemMap.hasOwnProperty(goal)
+? goalPoemMap[goal]
+: "此目標磁場暫無對應人生啟示錄。";
   const poem = goalPoemMap.hasOwnProperty(goal) ? goalPoemMap[goal] : "此目標磁場暫無對應人生啟示錄。";
 
   const metrics = { creative, mindset, drive, team, goal };
@@ -763,7 +846,7 @@ ${starName}
 
 今年歲數：${liuNian.age}歲
 流年階段：${liuNian.current.stage}
-
+今年機會點（${country}）：${chancePoint}
 ＝＝＝＝＝＝＝＝＝＝
 
 特殊基因：${matchedGenes.length}條：`;
