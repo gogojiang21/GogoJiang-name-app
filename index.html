@@ -849,8 +849,9 @@ function getLiuNian(lifeNumber, birthYear){
     "絕"
   ];
 
-  // 以命宮總數 + 虛歲 推流年
-  const index = (lifeNumber + age - 1) % stages.length;
+  const raw = (lifeNumber + age - 1) % 10;
+
+  const index = raw === 0 ? 9 : raw - 1;
 
   return {
     age,
