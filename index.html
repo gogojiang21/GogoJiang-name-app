@@ -828,18 +828,6 @@ function reduceToDigit(num){
 
   return num;
 }
-const luckStages = [
-  "冠帶",
-  "臨官",
-  "帝旺",
-  "衰",
-  "病",
-  "死",
-  "絕",
-  "胎",
-  "養",
-  "長生"
-];
 
 function getLiuNian(lifeNumber, birthYear){
 
@@ -848,37 +836,27 @@ function getLiuNian(lifeNumber, birthYear){
   // 虛歲
   const age = yearNow - birthYear + 1;
 
-  // 命宮尾數
-  let start = lifeNumber % 10;
+  const stages = [
+    "胎",
+    "養",
+    "長生",
+    "冠帶",
+    "臨官",
+    "帝旺",
+    "衰",
+    "病",
+    "死",
+    "絕"
+  ];
 
-  if(start === 0){
-    start = 10;
-  }
-
-  // 建立流年循環
-  const sequence = [];
-
-  for(let i = 0; i < 10; i++){
-
-    let num = start + i;
-
-    if(num > 10){
-      num -= 10;
-    }
-
-    sequence.push({
-      num,
-      stage: luckStages[i]
-    });
-  }
-
-  // 歲數定位
-  const index = (age - 1) % 10;
+  // 以命宮總數 + 虛歲 推流年
+  const index = (lifeNumber + age - 1) % stages.length;
 
   return {
     age,
-    current: sequence[index],
-    sequence
+    current: {
+      stage: stages[index]
+    }
   };
 }
 function analyzeName(fullName){
