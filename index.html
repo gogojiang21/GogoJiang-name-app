@@ -83,7 +83,7 @@ p, label {
   font-size:15px;
 }
 
-    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+  
     .card{padding:22px}
     .title{font-size:22px;font-weight:800;margin:0 0 14px}
     label{display:block;font-weight:700;margin:10px 0 8px}
@@ -154,7 +154,12 @@ button:hover{
 }
 .ok{color:#7ee2a7}
 .err{color:#ff9b8f}
-    .quad{
+.quad{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
 .grid{
   display:grid;
   grid-template-columns: 1.2fr 1fr;
@@ -184,6 +189,10 @@ button:hover{
   line-height:2;
   font-size:17px;
   min-height:280px;
+
+  max-height:900px;
+  overflow:auto;
+
   background: rgba(255,255,255,0.06);
   backdrop-filter: blur(12px);
   border:1px solid rgba(255,255,255,0.18);
