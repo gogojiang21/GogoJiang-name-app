@@ -53,14 +53,7 @@ p, label {
   padding:26px 28px;
   margin-bottom:18px;
 }
-.hero h1{
-  margin:0 0 10px;
-  font-size:36px;
-  font-weight:900;
-  letter-spacing:1px;
-  color:#ffffff;
-  text-shadow:0 4px 20px rgba(0,0,0,0.8);
-}
+
 .card{
   background: linear-gradient(
     135deg,
@@ -74,15 +67,49 @@ p, label {
   color:#ffffff;
 }
      
-    .hero{padding:26px 28px;margin-bottom:18px}
+
  
-    .hero .sub{
-  color: rgba(255,255,255,0.85);
-  line-height:1.9;
-  margin:0;
-  font-size:15px;
+.hero{
+  padding:42px 46px;
+  margin-bottom:24px;
 }
 
+.hero h1{
+  font-size:54px;
+  line-height:1.1;
+  margin-bottom:28px;
+  letter-spacing:-1px;
+}
+
+.hero .sub{
+  max-width:980px;
+  color: rgba(255,255,255,0.88);
+  line-height:2.15;
+  margin:0;
+  font-size:17px;
+}
+
+.hero .sub p{
+  margin:0 0 20px;
+  padding-left:18px;
+  border-left:3px solid rgba(200,155,90,0.55);
+}
+
+.hero .sub p:first-child{
+  font-size:22px;
+  font-weight:800;
+  color:#ffffff;
+  border-left:0;
+  padding-left:0;
+}
+.hero .sub p{
+  transition: all .25s ease;
+}
+
+.hero .sub p:hover{
+  transform: translateX(4px);
+  border-left-color:#d8a96a;
+}
   
     .card{padding:22px}
     .title{font-size:22px;font-weight:800;margin:0 0 14px}
