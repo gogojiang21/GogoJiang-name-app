@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gogo Jiang九宮命格分析</title>ㄑ
+  <title>Gogo Jiang九宮命格分析</title>
   <style>
     :root{
       --bg:#f7f3ee;
@@ -234,6 +234,50 @@ button:hover{
   font-size:12px;
   color: rgba(255,255,255,0.65);
   line-height:1.8;
+}
+    .liu-card{
+  margin-top:22px;
+  padding:28px 30px;
+  border-radius:22px;
+  background:linear-gradient(135deg, rgba(8,22,38,.92), rgba(8,18,32,.82));
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 18px 50px rgba(0,0,0,.35);
+  color:#fff;
+  line-height:1.8;
+}
+
+.liu-title{
+  font-size:30px;
+  font-weight:900;
+  color:#e8aa3e;
+  margin-bottom:18px;
+}
+
+.liu-badge{
+  display:inline-block;
+  padding:8px 24px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#b8872e,#6d4b16);
+  color:#fff;
+  font-weight:900;
+  margin-bottom:18px;
+}
+
+.liu-section{
+  margin-top:24px;
+}
+
+.liu-section h3{
+  color:#e8aa3e;
+  font-size:21px;
+  margin:0 0 8px;
+}
+
+.liu-section p{
+  margin:0;
+  color:rgba(255,255,255,.9);
+  font-size:17px;
+  line-height:1.75;
 }
     @media (max-width:900px){
       .grid{grid-template-columns:1fr}
@@ -1077,14 +1121,22 @@ const liuNianExplainMap = {
 謹記：你最大的問題，就是容易在低潮時把自己封閉起來。當你開始覺得「算了」的時候，其實內心已經快沒能量了。這一年最重要的，不是急著證明自己還行，而是學會真正放掉過去。因為很多結束，不是懲罰，而是新的開始正在靠近。`
 
 };
-
 function getLiuNianExplain(stage){
   return liuNianExplainMap[stage] || "";
 }
-   
+
+function parseLiuNianExplain(text){
+  return {
+    title: text.match(/「(.+?)」/)?.[1] || "流年運勢",
+    現象: text.match(/現象：([\s\S]*?)(?=心態：)/)?.[1]?.trim() || "",
+    心態: text.match(/心態：([\s\S]*?)(?=能量：)/)?.[1]?.trim() || "",
+    能量: text.match(/能量：([\s\S]*?)(?=貴人：)/)?.[1]?.trim() || "",
+    貴人: text.match(/貴人：([\s\S]*?)(?=謹記：)/)?.[1]?.trim() || "",
+    謹記: text.match(/謹記：([\s\S]*)/)?.[1]?.trim() || ""
+  };
+}
 
 function getLiuNian(lifeNumber, birthYear){
-
   const yearNow = new Date().getFullYear();
 
   // 虛歲
@@ -1315,7 +1367,54 @@ if (matchedGenes.length === 0) {
     text += `\n${g.name}\n${g.text}`;
   });
 }
+const liuParts = parseLiuNianExplain(liuNianExplain);
 
+const html = `
+<div>${text.replace(
+`＝＝＝＝＝＝＝＝＝＝
+流年解析：
+
+${liuNianExplain}`,
+""
+).replace(/\n/g,"<br>")}</div>
+
+<div class="liu-card">
+
+  <div class="liu-title">
+    ✧ 流年解析
+  </div>
+
+  <div class="liu-badge">
+    ${liuParts.title}
+  </div>
+
+  <div class="liu-section">
+    <h3>現象：</h3>
+    <p>${liuParts.現象}</p>
+  </div>
+
+  <div class="liu-section">
+    <h3>心態：</h3>
+    <p>${liuParts.心態}</p>
+  </div>
+
+  <div class="liu-section">
+    <h3>能量：</h3>
+    <p>${liuParts.能量}</p>
+  </div>
+
+  <div class="liu-section">
+    <h3>貴人：</h3>
+    <p>${liuParts.貴人}</p>
+  </div>
+
+  <div class="liu-section">
+    <h3>謹記：</h3>
+    <p>${liuParts.謹記}</p>
+  </div>
+
+</div>
+`;
 
 return {
   P,
@@ -1323,6 +1422,7 @@ return {
   C,
   L,
   text,
+  html,
   parentTrigger,
   diseaseTrigger,
   servantTrigger,
@@ -1362,7 +1462,7 @@ const fullNameEl = document.getElementById("fullName");
       try{
         const data = analyzeName(fullNameEl.value);
         setPalaceValues(data);
-        resultEl.textContent = data.text;
+        resultEl.innerHTML = data.html;
         setStatus("分析完成。", "ok");
       }catch(err){
         setPalaceValues(null);
