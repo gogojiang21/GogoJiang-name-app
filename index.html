@@ -680,10 +680,10 @@ function buildFiveElementPersonality(beforeKey, afterKey){
 
   if(beforeKey === afterKey){
 
- return `<div class="personality-sub">✦【先天／後天五行人格】</div><div class="personality-element">${beforeKey}</div><div class="personality-text">${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}</div>`;
+ return `<div class="personality-sub">【先天／後天五行人格】</div><div class="personality-element">${beforeKey}</div><div class="personality-text">${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}</div>`;
 }
 
-return `<div class="personality-sub">✦【先天五行人格】</div><div class="personality-element">${beforeKey}</div><div class="personality-text">${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}</div><div class="personality-sub">✦【後天五行人格】</div><div class="personality-element">${afterKey}</div><div class="personality-text">${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}</div>`;
+return `<div class="personality-sub">【先天五行人格】</div><div class="personality-element">${beforeKey}</div><div class="personality-text">${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}</div><div class="personality-sub">【後天五行人格】</div><div class="personality-element">${afterKey}</div><div class="personality-text">${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}</div>`;
 }
     
     /* ========= 目標磁場人生啟示錄 ========= */
@@ -1384,7 +1384,7 @@ ${poem}
 ${yearOracle}
 
 <div class="personality-title">
-五行人格分析：
+✧ 五行人格分析：
 </div>
 ${personalityText}
 
@@ -1467,7 +1467,7 @@ font-weight:900;
 margin-bottom:12px;
 color:#e8aa3e;
 ">
-✦ 發動解析
+✧ 發動解析
   </div>
 `;
 
@@ -1502,13 +1502,13 @@ font-size:16px;
 ">
 
 ${triggerExplainMap[name]
-.replace(`${name}：`, `<span style="color:#e8aa3e;font-weight:900;">✦ ${name}：</span>`)
+.replace(`${name}：`, `<span style="color:#e8aa3e;font-weight:900;"> ${name}：</span>`)
 
-.replace(/發動正向：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 發動正向：</span>')
+.replace(/發動正向：/g, '<span style="color:#e8aa3e;font-weight:900;"> 發動正向：</span>')
 
-.replace(/發動負向：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 發動負向：</span>')
+.replace(/發動負向：/g, '<span style="color:#e8aa3e;font-weight:900;"> 發動負向：</span>')
 
-.replace(/忌諱：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 忌諱：</span>')
+.replace(/忌諱：/g, '<span style="color:#e8aa3e;font-weight:900;"> 忌諱：</span>')
 
 .replace(/\n/g,"<br>")}
 
@@ -1533,7 +1533,7 @@ font-weight:900;
 margin-bottom:12px;
 color:#e8aa3e;
 ">
-    ✦ 特殊基因（${matchedGenes.length}條）
+    ✧ 特殊基因（${matchedGenes.length}條）
   </div>
 `;
 
