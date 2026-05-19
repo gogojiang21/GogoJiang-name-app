@@ -53,6 +53,15 @@ h1, h2, h3 {
   color:#e8aa3e;
   margin:4px 0 10px;
 }
+    .personality-text{
+  margin-top:6px;
+  line-height:1.9;
+  color:rgba(255,255,255,0.88);
+}
+
+.personality-sub + .personality-element{
+  margin-top:0;
+}
 p, label {
   color: rgba(255,255,255,0.85);
 }
@@ -612,7 +621,7 @@ function buildFiveElementPersonality(beforeKey, afterKey){
 
   if(beforeKey === afterKey){
 
-    return `
+  return `
 <div class="personality-sub">
 ✦【先天／後天五行人格】
 </div>
@@ -621,11 +630,13 @@ function buildFiveElementPersonality(beforeKey, afterKey){
 ${beforeKey}
 </div>
 
+<div class="personality-text">
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
+</div>
 `;
-  }
+}
 
-  return `
+return `
 <div class="personality-sub">
 ✦【先天五行人格】
 </div>
@@ -634,7 +645,9 @@ ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
 ${beforeKey}
 </div>
 
+<div class="personality-text">
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
+</div>
 
 <div class="personality-sub">
 ✦【後天五行人格】
@@ -644,7 +657,9 @@ ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
 ${afterKey}
 </div>
 
+<div class="personality-text">
 ${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}
+</div>
 `;
 }
     
