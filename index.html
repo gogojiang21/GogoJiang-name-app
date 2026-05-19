@@ -1502,20 +1502,18 @@ font-size:16px;
 ">
 
 ${triggerExplainMap[name]
-.replace(`${name}：`, `<span style="color:#e8aa3e;font-weight:900;font-size:20px;">✦ ${name}：</span>`)
-  
+.replace(`${name}：`, `<span style="color:#e8aa3e;font-weight:900;">✦ ${name}：</span>`)
+
 .replace(/發動正向：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 發動正向：</span>')
 
 .replace(/發動負向：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 發動負向：</span>')
 
 .replace(/忌諱：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 忌諱：</span>')
 
-.replace(/\n/g,"<br><br>")}
+.replace(/\n/g,"<br>")}
 
 </div>
 `;
-
-}
 
   });
 
