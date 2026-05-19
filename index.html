@@ -216,7 +216,7 @@ button:hover{
 }
     
 .result{
-  white-space:pre-wrap;
+  white-space:normal;
   line-height:1.75;
   font-size:17px;
   min-height:280px;
@@ -235,50 +235,7 @@ button:hover{
   color: rgba(255,255,255,0.65);
   line-height:1.8;
 }
-    .liu-card{
-  margin-top:16px;
-  padding:18px 20px;
-  border-radius:18px;
-  background:linear-gradient(135deg, rgba(8,22,38,.88), rgba(8,18,32,.75));
-  border:1px solid rgba(255,255,255,.14);
-  box-shadow:0 10px 30px rgba(0,0,0,.22);
-  color:#fff;
-  line-height:1.6;
-}
-
-.liu-title{
-  font-size:22px;
-  font-weight:900;
-  color:#e8aa3e;
-  margin-bottom:18px;
-}
-
-.liu-badge{
-  display:inline-block;
-  padding:6px 16px;
-  border-radius:999px;
-  background:linear-gradient(135deg,#b8872e,#6d4b16);
-  color:#fff;
-  font-weight:900;
-  margin-bottom:18px;
-}
-
-.liu-section{
-  margin-top:14px;
-}
-
-.liu-section h3{
-  color:#e8aa3e;
-  font-size:16px;
-  margin:0 0 8px;
-}
-
-.liu-section p{
-  margin:0;
-  color:rgba(255,255,255,.9);
-  font-size:15px;
-  line-height:1.75;
-}
+    
     @media (max-width:900px){
       .grid{grid-template-columns:1fr}
       h1{font-size:28px}
@@ -1378,39 +1335,94 @@ ${liuNianExplain}`,
 ""
 ).replace(/\n/g,"<br>")}</div>
 
-<div class="liu-card">
+<div style="margin-top:10px;">
 
-  <div class="liu-title">
+  <div style="
+font-size:22px;
+font-weight:900;
+margin-bottom:12px;
+color:#e8aa3e;
+">
     ✧ 流年解析
   </div>
 
-  <div class="liu-badge">
+  <div style="
+display:inline-block;
+padding:4px 14px;
+border-radius:999px;
+background:rgba(255,255,255,0.12);
+font-size:14px;
+font-weight:700;
+margin-bottom:14px;
+">
     ${liuParts.title}
   </div>
-
-  <div class="liu-section">
-    <h3>現象：</h3>
-    <p>${liuParts.現象}</p>
+<div style="margin-top:12px;">
+   <h3 style="
+margin:0 0 4px;
+font-size:16px;
+color:#e8aa3e;
+">現象：</h3>
+   <p style="
+margin:0;
+font-size:15px;
+line-height:1.7;
+color:rgba(255,255,255,.88);
+">${liuParts.現象}</p>
+  </div>
+<div style="margin-top:12px;">
+   <h3 style="
+margin:0 0 4px;
+font-size:16px;
+color:#e8aa3e;
+">心態：</h3>
+    <p style="
+margin:0;
+font-size:15px;
+line-height:1.7;
+color:rgba(255,255,255,.88);
+">${liuParts.心態}</p>
   </div>
 
-  <div class="liu-section">
-    <h3>心態：</h3>
-    <p>${liuParts.心態}</p>
+  <div style="margin-top:12px;">
+   <h3 style="
+margin:0 0 4px;
+font-size:16px;
+color:#e8aa3e;
+">能量：</h3>
+    <p style="
+margin:0;
+font-size:15px;
+line-height:1.7;
+color:rgba(255,255,255,.88);
+">${liuParts.能量}</p>
   </div>
 
-  <div class="liu-section">
-    <h3>能量：</h3>
-    <p>${liuParts.能量}</p>
+  <div style="margin-top:12px;">
+    <h3 style="
+margin:0 0 4px;
+font-size:16px;
+color:#e8aa3e;
+">貴人：</h3>
+    <p style="
+margin:0;
+font-size:15px;
+line-height:1.7;
+color:rgba(255,255,255,.88);
+">${liuParts.貴人}</p>
   </div>
-
-  <div class="liu-section">
-    <h3>貴人：</h3>
-    <p>${liuParts.貴人}</p>
-  </div>
-
-  <div class="liu-section">
-    <h3>謹記：</h3>
-    <p>${liuParts.謹記}</p>
+<div style="margin-top:12px;">
+   <h3 style="
+margin:0 0 4px;
+font-size:16px;
+color:#e8aa3e;
+">謹記：</h3>
+   <p style="
+margin:0;
+font-size:15px;
+line-height:1.7;
+color:rgba(255,255,255,.88);
+">${liuParts.謹記}</p>
   </div>
 
 </div>
