@@ -1494,17 +1494,25 @@ color:rgba(255,255,255,.88);
     if (triggerExplainMap[name]) {
 
   triggerHtml += `
-  <div style="
-margin-bottom:18px;
-padding:14px;
-border-radius:16px;
-background:rgba(255,255,255,0.06);
-border:1px solid rgba(255,255,255,0.12);
-line-height:1.9;
+<div style="
+margin-bottom:30px;
+line-height:2;
 color:rgba(255,255,255,.88);
+font-size:16px;
 ">
-${triggerExplainMap[name].replace(/\n/g,"<br>")}
-  </div>
+
+${triggerExplainMap[name]
+.replace(`${name}：`, `<span style="color:#e8aa3e;font-weight:900;font-size:20px;">✦ ${name}：</span>`)
+  
+.replace(/發動正向：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 發動正向：</span>')
+
+.replace(/發動負向：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 發動負向：</span>')
+
+.replace(/忌諱：/g, '<span style="color:#e8aa3e;font-weight:900;">✦ 忌諱：</span>')
+
+.replace(/\n/g,"<br><br>")}
+
+</div>
 `;
 
 }
