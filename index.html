@@ -591,18 +591,26 @@ const fiveElementPersonalityMap = {
 };
 
 function buildFiveElementPersonality(beforeKey, afterKey){
+
   if(beforeKey === afterKey){
-    return `【先天／後天五行人格】
+
+    return `✦【先天／後天五行人格】
+
 ${beforeKey}
+
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}`;
   }
 
-  return `【先天五行人格】
+  return `✦【先天五行人格】
+
 ${beforeKey}
+
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
 
-【後天五行人格】
+✦【後天五行人格】
+
 ${afterKey}
+
 ${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}`;
 }
 
@@ -1314,15 +1322,28 @@ ${personalityText}
 流年解析：
 
 ${liuNianExplain}
+＝＝＝＝＝＝＝＝＝＝`;
 
-＝＝＝＝＝＝＝＝＝＝
-特殊基因：${matchedGenes.length}條：`;
+text += `
+
+✦ 特殊基因（${matchedGenes.length}條）`;
+
 if (matchedGenes.length === 0) {
-  text += "\n成功基因0條";
+
+  text += "\n尚未形成特殊成功基因";
+
 } else {
+
   matchedGenes.forEach(g => {
-    text += `\n${g.name}\n${g.text}`;
+
+    text += `
+
+✦ ${g.name}
+
+${g.text}`;
+
   });
+
 }
 const liuParts = parseLiuNianExplain(liuNianExplain);
 
