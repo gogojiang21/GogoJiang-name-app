@@ -186,7 +186,11 @@ button:hover{
   gap:12px;
   margin-top:6px;
 }
-
+.active-trigger{
+  color:#ff4d4f !important;
+  font-weight:900;
+  text-shadow:0 0 10px rgba(255,77,79,.45);
+}
 .grid{
   display:grid;
   grid-template-columns: 1.2fr 1fr;
@@ -932,7 +936,29 @@ function reduceToDigit(num){
 
   return num;
 }
+function isTriggered(age, palaceNum){
 
+  const start = palaceNum + 1;
+
+  // 往後發動
+  if(age >= start){
+
+    return (age - start) % 9 === 0;
+  }
+
+  // 往前發動
+  let prev = palaceNum - 10;
+
+  while(prev > 0){
+
+    if(prev === age) return true;
+
+    prev -= 9;
+  }
+
+  return false;
+}
+    
 function getLiuNian(lifeNumber, birthYear){
 
   const yearNow = new Date().getFullYear();
@@ -1015,6 +1041,45 @@ const M1 = fullNameStrokeDict[given1];
   const D = S + M1;
   const C = isSingleName ? (M1 + 1) : (M1 + M2);
   const L = isSingleName ? (S + M1) : (S + M1 + M2);
+  // 虛歲
+const age = new Date().getFullYear() - birthYear + 1;
+
+// 遷移宮
+const movePalace = D + 1;
+
+// 發動判斷
+const parentTrigger = isTriggered(age, P);
+
+const diseaseTrigger = isTriggered(age, D);
+
+const servantTrigger = isTriggered(age, C);
+
+const lifeTrigger = isTriggered(age, L);
+
+const moveTrigger = isTriggered(age, movePalace);
+
+// 發動文字
+const triggerTexts = [];
+
+if(parentTrigger){
+  triggerTexts.push("父母宮發動");
+}
+
+if(diseaseTrigger){
+  triggerTexts.push("疾惡宮發動");
+}
+
+if(servantTrigger){
+  triggerTexts.push("奴僕宮發動");
+}
+
+if(lifeTrigger){
+  triggerTexts.push("命宮發動");
+}
+
+if(moveTrigger){
+  triggerTexts.push("遷移宮發動");
+}
 
   const creative = normalizeDiff(P, D);
   const mindset = getDigitPairValue(D);
@@ -1088,6 +1153,7 @@ const poem = goalPoemMap.hasOwnProperty(goal)
 ${poem}
 ＝＝＝＝＝＝＝＝＝＝
 今年歲數：${liuNian.age}歲
+目前發動：${triggerTexts.length ? triggerTexts.join("、") : "無"}
 流年階段：${liuNian.current.stage}
 今年機會點（${country}）：${chancePoint}
 當年啟示錄：
@@ -1105,8 +1171,17 @@ if (matchedGenes.length === 0) {
 }
 
 
-  return { P, D, C, L, text };
-}
+return {
+  P,
+  D,
+  C,
+  L,
+  text,
+  parentTrigger,
+  diseaseTrigger,
+  servantTrigger,
+  lifeTrigger
+};
 
     const fullNameEl = document.getElementById("fullName");
     const resultEl = document.getElementById("result");
@@ -1117,13 +1192,24 @@ if (matchedGenes.length === 0) {
       statusEl.textContent = msg;
     }
 
-    function setPalaceValues(data){
-      document.getElementById("pVal").textContent = data?.P ?? "—";
-      document.getElementById("dVal").textContent = data?.D ?? "—";
-      document.getElementById("cVal").textContent = data?.C ?? "—";
-      document.getElementById("lVal").textContent = data?.L ?? "—";
-    }
+   function setPalaceValues(data){
 
+  const pEl = document.getElementById("pVal");
+  pEl.textContent = data?.P ?? "—";
+  pEl.classList.toggle("active-trigger", data?.parentTrigger ?? false);
+
+  const dEl = document.getElementById("dVal");
+  dEl.textContent = data?.D ?? "—";
+  dEl.classList.toggle("active-trigger", data?.diseaseTrigger ?? false);
+
+  const cEl = document.getElementById("cVal");
+  cEl.textContent = data?.C ?? "—";
+  cEl.classList.toggle("active-trigger", data?.servantTrigger ?? false);
+
+  const lEl = document.getElementById("lVal");
+  lEl.textContent = data?.L ?? "—";
+  lEl.classList.toggle("active-trigger", data?.lifeTrigger ?? false);
+}
     document.getElementById("analyzeBtn").addEventListener("click", () => {
       try{
         const data = analyzeName(fullNameEl.value);
