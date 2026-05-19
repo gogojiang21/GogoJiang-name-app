@@ -33,7 +33,20 @@ h1, h2, h3 {
   color: #ffffff;
   text-shadow: 0 4px 20px rgba(0,0,0,0.8);
 }
+.personality-title{
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:12px;
+  color:#e8aa3e;
+}
 
+.personality-sub{
+  font-size:18px;
+  font-weight:800;
+  color:#e8aa3e;
+  margin-top:20px;
+  margin-bottom:10px;
+}
 p, label {
   color: rgba(255,255,255,0.85);
 }
@@ -594,20 +607,25 @@ function buildFiveElementPersonality(beforeKey, afterKey){
 
   if(beforeKey === afterKey){
 
-    return `✦【先天／後天五行人格】
+    return `<div class="personality-sub">✦【先天／後天五行人格】
+    </div>
 
 ${beforeKey}
 
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}`;
   }
 
-  return `✦【先天五行人格】
+  return `<div class="personality-sub">
+✦【先天五行人格】
+</div>
 
 ${beforeKey}
 
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
 
+<div class="personality-sub">
 ✦【後天五行人格】
+</div>
 
 ${afterKey}
 
@@ -1314,7 +1332,9 @@ ${poem}
 當年啟示錄：
 ${yearOracle}
 ＝＝＝＝＝＝＝＝＝＝
+<div class="personality-title">
 五行人格分析：
+</div>
 ${personalityText}
 
 ＝＝＝＝＝＝＝＝＝＝
