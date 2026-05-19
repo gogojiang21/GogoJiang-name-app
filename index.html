@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gogo Jiang九宮命格分析</title>
+  <title>Gogo Jiang九宮命格分析</title>ㄑ
   <style>
     :root{
       --bg:#f7f3ee;
@@ -1041,7 +1041,20 @@ const M1 = fullNameStrokeDict[given1];
 const age = new Date().getFullYear() - birthYear + 1;
 
 // 遷移宮
-const movePalace = D + 1;
+
+/* 最後一個字筆畫 */
+const lastNameStroke = M2 || M1;
+
+/* 遷移宮 */
+const movePalace = lastNameStroke + 1;
+
+/* 第一次發動 */
+const moveStart = movePalace + 1;
+
+/* 每9年循環發動 */
+const moveTrigger =
+  age >= moveStart &&
+  (age - moveStart) % 9 === 0;
 
 // 發動判斷
 const parentTrigger = isTriggered(age, P);
@@ -1052,7 +1065,7 @@ const servantTrigger = isTriggered(age, C);
 
 const lifeTrigger = isTriggered(age, L);
 
-const moveTrigger = isTriggered(age, movePalace);
+
 
 // 發動文字
 const triggerTexts = [];
