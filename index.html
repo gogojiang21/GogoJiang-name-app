@@ -1502,28 +1502,13 @@ font-size:16px;
 ">
 
 ${triggerExplainMap[name]
-.replace(name, `
-<div style="
-display:inline-block;
-padding:10px 22px;
-border-radius:999px;
-border:2px solid rgba(232,170,62,.45);
-background:rgba(232,170,62,.12);
-color:#e8aa3e;
-font-weight:900;
-font-size:20px;
-margin-bottom:14px;
-box-shadow:0 0 18px rgba(232,170,62,.12);
-">
-${name}
-</div>
-`)
+.replace(`${name}：`, `<span style="display:inline-block;padding:10px 22px;border-radius:999px;border:2px solid rgba(232,170,62,.45);background:rgba(232,170,62,.12);color:#e8aa3e;font-weight:900;font-size:20px;margin-bottom:14px;box-shadow:0 0 18px rgba(232,170,62,.12);">${name}</span>`)
 
-.replace(/發動正向：/g, '<span style="color:#e8aa3e;font-weight:900;"> 發動正向：</span>')
+.replace(/發動正向：/g, '<span style="color:#e8aa3e;font-weight:900;">發動正向：</span>')
 
-.replace(/發動負向：/g, '<span style="color:#e8aa3e;font-weight:900;"> 發動負向：</span>')
+.replace(/發動負向：/g, '<span style="color:#e8aa3e;font-weight:900;">發動負向：</span>')
 
-.replace(/忌諱：/g, '<span style="color:#e8aa3e;font-weight:900;"> 忌諱：</span>')
+.replace(/忌諱：/g, '<span style="color:#e8aa3e;font-weight:900;">忌諱：</span>')
 
 .replace(/\n/g,"<br>")}
 
