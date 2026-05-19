@@ -1297,8 +1297,7 @@ const poem = goalPoemMap.hasOwnProperty(goal)
 
   const metrics = { creative, mindset, drive, team, goal };
   const matchedGenes = geneRules.filter(rule => metrics[rule.keyA] === metrics[rule.keyB]);
-
-  let text =
+let text =
 `命格分析：${fullName}
 命格排列：${P}/${D}/${C}/${L}
 先天五行：${thoughtFn}
@@ -1324,27 +1323,6 @@ ${personalityText}
 ${liuNianExplain}
 ＝＝＝＝＝＝＝＝＝＝`;
 
-text += `
-
-✦ 特殊基因（${matchedGenes.length}條）`;
-
-if (matchedGenes.length === 0) {
-
-  text += "\n尚未形成特殊成功基因";
-
-} else {
-
-  matchedGenes.forEach(g => {
-
-    text += `
-
-✦ ${g.name}
-
-${g.text}`;
-
-  });
-
-}
 const liuParts = parseLiuNianExplain(liuNianExplain);
 
 const html = `
@@ -1352,7 +1330,8 @@ const html = `
 `＝＝＝＝＝＝＝＝＝＝
 流年解析：
 
-${liuNianExplain}`,
+${liuNianExplain}
+＝＝＝＝＝＝＝＝＝＝`,
 ""
 ).replace(/\n/g,"<br>")}</div>
 
@@ -1378,76 +1357,63 @@ margin-bottom:14px;
 ">
     ${liuParts.title}
   </div>
-<div style="margin-top:12px;">
-   <h3 style="
-margin:0 0 4px;
-font-size:16px;
-color:#e8aa3e;
-">現象：</h3>
-   <p style="
-margin:0;
-font-size:15px;
-line-height:1.7;
-color:rgba(255,255,255,.88);
-">${liuParts.現象}</p>
-  </div>
-<div style="margin-top:12px;">
-   <h3 style="
-margin:0 0 4px;
-font-size:16px;
-color:#e8aa3e;
-">心態：</h3>
-    <p style="
-margin:0;
-font-size:15px;
-line-height:1.7;
-color:rgba(255,255,255,.88);
-">${liuParts.心態}</p>
+
+  <div style="margin-top:12px;">
+    <h3 style="margin:0 0 4px;font-size:16px;color:#e8aa3e;">現象：</h3>
+    <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">${liuParts.現象}</p>
   </div>
 
   <div style="margin-top:12px;">
-   <h3 style="
-margin:0 0 4px;
-font-size:16px;
-color:#e8aa3e;
-">能量：</h3>
-    <p style="
-margin:0;
-font-size:15px;
-line-height:1.7;
-color:rgba(255,255,255,.88);
-">${liuParts.能量}</p>
+    <h3 style="margin:0 0 4px;font-size:16px;color:#e8aa3e;">心態：</h3>
+    <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">${liuParts.心態}</p>
   </div>
 
   <div style="margin-top:12px;">
-    <h3 style="
-margin:0 0 4px;
-font-size:16px;
-color:#e8aa3e;
-">貴人：</h3>
-    <p style="
-margin:0;
-font-size:15px;
-line-height:1.7;
-color:rgba(255,255,255,.88);
-">${liuParts.貴人}</p>
+    <h3 style="margin:0 0 4px;font-size:16px;color:#e8aa3e;">能量：</h3>
+    <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">${liuParts.能量}</p>
   </div>
-<div style="margin-top:12px;">
-   <h3 style="
-margin:0 0 4px;
-font-size:16px;
-color:#e8aa3e;
-">謹記：</h3>
-   <p style="
-margin:0;
-font-size:15px;
-line-height:1.7;
-color:rgba(255,255,255,.88);
-">${liuParts.謹記}</p>
+
+  <div style="margin-top:12px;">
+    <h3 style="margin:0 0 4px;font-size:16px;color:#e8aa3e;">貴人：</h3>
+    <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">${liuParts.貴人}</p>
+  </div>
+
+  <div style="margin-top:12px;">
+    <h3 style="margin:0 0 4px;font-size:16px;color:#e8aa3e;">謹記：</h3>
+    <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">${liuParts.謹記}</p>
   </div>
 
 </div>
 `;
+
+let geneHtml = `
+<div style="margin-top:22px;">
+  <div style="
+font-size:22px;
+font-weight:900;
+margin-bottom:12px;
+color:#e8aa3e;
+">
+    ✦ 特殊基因（${matchedGenes.length}條）
+  </div>
+`;
+
+if (matchedGenes.length === 0) {
+  geneHtml += `
+  <div style="font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">
+    尚未形成特殊成功基因
+  </div>`;
+} else {
+  matchedGenes.forEach(g => {
+    geneHtml += `
+  <div style="margin-top:14px;">
+    <h3 style="margin:0 0 6px;font-size:16px;color:#e8aa3e;">${g.name}</h3>
+    <p style="margin:0;font-size:15px;line-height:1.7;color:rgba(255,255,255,.88);">${g.text}</p>
+  </div>`;
+  });
+}
+
+geneHtml += `</div>`;
 
 return {
   P,
@@ -1455,7 +1421,7 @@ return {
   C,
   L,
   text,
-  html,
+  html: html + geneHtml,
   parentTrigger,
   diseaseTrigger,
   servantTrigger,
