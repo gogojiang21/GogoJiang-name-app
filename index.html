@@ -36,16 +36,22 @@ h1, h2, h3 {
 .personality-title{
   font-size:22px;
   font-weight:900;
-  margin-bottom:12px;
+  margin:0 0 8px;
   color:#e8aa3e;
 }
 
 .personality-sub{
-  font-size:18px;
-  font-weight:800;
+  font-size:16px;
+  font-weight:900;
   color:#e8aa3e;
-  margin-top:20px;
-  margin-bottom:10px;
+  margin:10px 0 6px;
+}
+
+.personality-element{
+  font-size:22px;
+  font-weight:900;
+  color:#e8aa3e;
+  margin:4px 0 10px;
 }
 p, label {
   color: rgba(255,255,255,0.85);
@@ -602,24 +608,31 @@ const fiveElementPersonalityMap = {
 
   "水旺": `你的人格屬於那種很現實、也很有商業頭腦的人。你其實很會觀察利益跟機會，很多事情你都會先想「值不值得」、「有沒有結果」，所以你做事通常不太會亂衝。很多人會覺得你很聰明，因為你對數字、資源或金錢的敏感度通常比一般人高，也很懂得怎麼把東西慢慢經營起來。你其實很重效率，不喜歡浪費時間在沒意義的人事物上，所以很多時候你做決定會偏務實。你很適合做商業、投資、買賣、管理或需要談利益的事情，因為你很懂得怎麼讓資源流動起來。你其實也很有適應力，遇到不同環境時，通常都能慢慢找到最適合自己的生存方式。只是你的問題也很明顯，你有時候太現實、太容易計較。很多人會覺得你講話太直接，因為你其實不太喜歡拐彎抹角。你有時候也很容易因為怕失敗，而變得太保守，明明有機會，卻還是會想很多。其實你不是沒膽量，而是你很怕白白浪費自己的資源跟時間。你的人生通常屬於越流動越有機會的人，因為你的優勢本來就不是停在原地，而是很懂得怎麼讓資源、人脈跟金錢一直循環起來。簡單來說，你這種人格很像「經營型人格」，你不一定最感性，但你很會把機會慢慢變成財富。`
 };
-
 function buildFiveElementPersonality(beforeKey, afterKey){
 
   if(beforeKey === afterKey){
 
-    return `<div class="personality-sub">✦【先天／後天五行人格】
-    </div>
+    return `
+<div class="personality-sub">
+✦【先天／後天五行人格】
+</div>
 
+<div class="personality-element">
 ${beforeKey}
+</div>
 
-${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}`;
+${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
+`;
   }
 
-  return `<div class="personality-sub">
+  return `
+<div class="personality-sub">
 ✦【先天五行人格】
 </div>
 
+<div class="personality-element">
 ${beforeKey}
+</div>
 
 ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
 
@@ -627,11 +640,13 @@ ${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
 ✦【後天五行人格】
 </div>
 
+<div class="personality-element">
 ${afterKey}
+</div>
 
-${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}`;
+${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}
+`;
 }
-
     
     /* ========= 目標磁場人生啟示錄 ========= */
     const goalPoemMap = {
@@ -1407,7 +1422,7 @@ margin-bottom:14px;
 `;
 
 let geneHtml = `
-<div style="margin-top:22px;">
+<div style="margin-top:14px;">
   <div style="
 font-size:22px;
 font-weight:900;
