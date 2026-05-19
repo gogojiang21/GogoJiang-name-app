@@ -1451,7 +1451,7 @@ color:#e8aa3e;
   </div>
 `;
 
-if (!activeTriggers || activeTriggers.length === 0) {
+if (!triggerTexts || triggerTexts.length === 0) {
 
   triggerHtml += `
   <div style="
@@ -1469,9 +1469,9 @@ color:rgba(255,255,255,.88);
 
 } else {
 
-  activeTriggers.forEach(name => {
+  triggerTexts.forEach(name => {
 
-    if (triggerExplainMap[name + "發動"]) {
+    if (triggerExplainMap[name]) {
 
   triggerHtml += `
   <div style="
@@ -1483,7 +1483,7 @@ border:1px solid rgba(255,255,255,0.12);
 line-height:1.9;
 color:rgba(255,255,255,.88);
 ">
-${triggerExplainMap[name + "發動"].replace(/\n/g,"<br>")}
+${triggerExplainMap[name].replace(/\n/g,"<br>")}
   </div>
 `;
 
