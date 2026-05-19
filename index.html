@@ -621,46 +621,10 @@ function buildFiveElementPersonality(beforeKey, afterKey){
 
   if(beforeKey === afterKey){
 
-  return `
-<div class="personality-sub">
-✦【先天／後天五行人格】
-</div>
-
-<div class="personality-element">
-${beforeKey}
-</div>
-
-<div class="personality-text">
-${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
-</div>
-`;
+ return `<div class="personality-sub">✦【先天／後天五行人格】</div><div class="personality-element">${beforeKey}</div><div class="personality-text">${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}</div>`;
 }
 
-return `
-<div class="personality-sub">
-✦【先天五行人格】
-</div>
-
-<div class="personality-element">
-${beforeKey}
-</div>
-
-<div class="personality-text">
-${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}
-</div>
-
-<div class="personality-sub">
-✦【後天五行人格】
-</div>
-
-<div class="personality-element">
-${afterKey}
-</div>
-
-<div class="personality-text">
-${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}
-</div>
-`;
+return `<div class="personality-sub">✦【先天五行人格】</div><div class="personality-element">${beforeKey}</div><div class="personality-text">${fiveElementPersonalityMap[beforeKey] || "尚未建立此五行解析。"}</div><div class="personality-sub">✦【後天五行人格】</div><div class="personality-element">${afterKey}</div><div class="personality-text">${fiveElementPersonalityMap[afterKey] || "尚未建立此五行解析。"}</div>`;
 }
     
     /* ========= 目標磁場人生啟示錄 ========= */
